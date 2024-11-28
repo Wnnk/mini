@@ -1,0 +1,106 @@
+@use 'var' as *;
+
+.sidebar_right .block.layers .content {
+  padding-bottom: 25px;
+}
+.layer_add {
+  display: inline-block;
+  padding: 1px 8px;
+  margin-right: 10px;
+  // background-color: #419147;
+  background-color: $background-color-active;
+  border: 1px solid #444;
+  border-color: $border-color;
+  color: $text-color-active;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.layers_arrow {
+  display: inline-block;
+  float: right;
+  margin-left: 5px;
+  padding: 1px 8px;
+  border: 1px solid #444;
+  border-color: $border-color;
+  text-decoration: none;
+  color: $text-color;
+  font-size: 12px;
+}
+
+.layers_list {
+  margin-top: 10px;
+}
+
+.layers_list .item {
+  margin-bottom: 2px;
+}
+
+.layers_list .visible {
+  opacity: 0.4;
+}
+.layers_list .visibility {
+  position: relative;
+  float: left;
+  cursor: pointer;
+  padding: 0px 3px 0px 3px;
+  margin-right: 5px;
+  width: 20px;
+  height: 19px;
+  opacity: 0.1;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.layers_list .visibility:after {
+  position: absolute;
+  content: '';
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  filter: $menu-icons-filter;
+  background: url(../assets/view.svg) no-repeat center center;
+  background-size: 18px auto;
+}
+
+.layers_list .delete {
+  float: right;
+  cursor: pointer;
+  padding: 0px 3px 0px 3px;
+  width: 12px;
+  height: 19px;
+  margin-left: 5px;
+  background: transparent url(../assets/delete.svg) no-repeat center center;
+  background-size: 10px 10px;
+  border: none;
+  box-shadow: none;
+}
+
+.layers_list .item.active .layer_name {
+  background-color: $background-color-active;
+  color: $text-color-active;
+}
+.layers_list .layer_name {
+  display: block;
+  padding: 1px 5px 3px 5px;
+  height: 19px;
+  width: calc(100% - 44px);
+  text-align: left;
+  overflow: hidden;
+  background-color: #989898;
+  background-color: $area-background-color;
+  border: 1px solid #393939;
+  border-color: $border-color;
+  border-radius: 3px;
+  cursor: pointer;
+  overflow: hidden;
+  font-size: 12px;
+  color: $text-color;
+  white-space: nowrap;
+}
+
+.clear {
+  clear: both;
+}

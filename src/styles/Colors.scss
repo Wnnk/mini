@@ -1,0 +1,603 @@
+@use 'var' as *;
+
+.block .content {
+  padding: 7.5px 5px;
+}
+.ui_flex_group.stacked:first-child {
+  margin-top: 0;
+}
+
+.ui_flex_group.justify_content_space_between {
+  justify-content: space-between;
+}
+.ui_flex_group.stacked {
+  margin: .75rem 0;
+}
+.ui_flex_group {
+  display: flex;
+  flex-direction: row;
+}
+
+.ui_color_sample {
+  border: 1px solid #999;
+  box-shadow: 0 0 0 1px #555 inset;
+  display: block;
+  height: 28px;
+  width: 28px;
+}
+.ui_button_group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.block_section:last-child {
+  margin-bottom: 0;
+}
+
+.block_section {
+  margin: .75rem 0;
+}
+
+
+
+.ui_button_group > button:first-child, .ui_button_group > input[type="button"]:first-child {
+  border-radius: $button-border-radius 0 0 $button-border-radius;
+}
+
+.sr_only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ui_button_group > button, .ui_button_group > input[type="button"] {
+  border-radius: 0;
+}
+button[aria-pressed="true"], input[type="button"][aria-pressed="true"] {
+  background-color: $button-background-color-active;
+  color: $button-text-color-active;
+  box-shadow: 0 1px 2px 0 $button-shadow-color, 0 1px 1px 1.5px rgba(58, 40, 40, 0.1) inset, 0 -1px 0 0 $button-text-color-active inset;
+}
+.ui_icon_button {
+  height: 2.8rem;
+  line-height: 2.8rem;
+}
+
+
+
+.ui_color_picker_gradient {
+  padding: 0 0 80% 0;
+  position: relative;
+  width: 100%;
+}
+
+.ui_color_picker_gradient .secondary_pick {
+  position: absolute;
+  left: 0;
+  right: 17%;
+  top: 0;
+  bottom: 0;
+  border: 1px solid $border-color;
+  background: green;
+}
+.ui_color_picker_gradient .secondary_pick .saturation_gradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #fff, rgba(204, 154, 129, 0));
+}
+
+.ui_color_picker_gradient .secondary_pick .value_gradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(to top, #000, rgba(204, 154, 129, 0));
+}
+
+.ui_color_picker_gradient .secondary_pick .handle {
+  position: absolute;
+  left: 0;
+  right: auto;
+  top: 0;
+  bottom: auto;
+  pointer-events: none;
+}
+
+.ui_color_picker_gradient .secondary_pick .handle:before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -.6rem;
+  top: -.6rem;
+  height: .3rem;
+  width: .3rem;
+  border: .4rem solid #999;
+  border-radius: 1000px;
+}
+
+.ui_color_picker_gradient .secondary_pick .handle:after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -.5rem;
+  top: -.5rem;
+  height: .5rem;
+  width: .5rem;
+  border: .2rem solid white;
+  border-radius: 1000px;
+}
+
+
+
+.ui_color_picker_gradient .primary_pick {
+  position: absolute;
+  left: 86%;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: white;
+}
+
+.ui_range.vertical.color_picker_thin {
+  padding: 1px 0;
+  border-radius: 0;
+  width: 100%;
+}
+
+.ui_color_picker_gradient .primary_pick .ui_range {
+  border-color: rgba(1, 1, 1, 0.1);
+}
+.ui_range.vertical {
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  width: 1.8rem;
+  padding: calc($range-handle-width / 2) 0;
+}
+.ui_range {
+  display: flex;
+  flex-direction: row;
+  background: $input-background-color;
+  border: 1px solid $input-border-color;
+  border-radius: 1000px;
+  height: 1.8rem;
+  overflow: visible;
+  outline: 0;
+  padding: 0 calc($range-handle-width / 2);
+  position: relative;
+  width: 100%;
+}
+
+.ui_range.vertical.color_picker_thin .padded_track {
+  top: 0;
+  bottom: 0;
+}
+
+.ui_range.vertical .padded_track {
+  left: 0;
+  right: 0;
+  top: calc($range-handle-width/ 2);
+  bottom: calc($range-handle-width / 2);
+}
+.ui_range .padded_track {
+  position: absolute;
+  left: calc($range-handle-width / 2);
+  right: calc($range-handle-width / 2);
+  top: 0;
+  bottom: 0;
+}
+
+.ui_range.vertical .bar {
+  width: 100%;
+  height: 0%;
+}
+
+.ui_range .bar {
+  overflow: visible;
+  position: relative;
+  width: 0%;
+}
+
+.ui_range.vertical.color_picker_thin .handle {
+  border-radius: 0;
+  width: 100%;
+  height: .5rem;
+}
+
+.ui_range.vertical .handle {
+  transform: translate(50%, -50%);
+  top: 0;
+  right: 50%;
+  cursor: row-resize;
+}
+.ui_range .handle {
+  background: $input-text-color;
+  border: 1px solid $border-color;
+  border-radius: 1000px;
+  box-sizing: border-box;
+  cursor: col-resize;
+  display: block;
+  height: 1.8rem;
+  width: $range-handle-width;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(50%, -50%);
+}
+
+.ui_input_group.stacked:last-child {
+  margin-bottom: 0;
+}
+
+:not(.ui_input_grid) > .ui_input_group {
+  border-radius: $input-border-radius;
+  box-shadow: 0 1px 0 0 rgba(1, 1, 1, 0.1);
+}
+.ui_input_group.stacked {
+  margin: .75rem 0;
+}
+.ui_input_group {
+  display: flex;
+  flex-direction: row;
+  min-height: 2.4rem;
+  width: 100%;
+}
+
+.ui_input_group > :first-child {
+  border-radius: $input-border-radius 0 0 $input-border-radius;
+}
+.ui_input_group > label {
+  display: flex;
+  align-items: center;
+  border: 1px solid $input-group-border-color;
+  border-right: 0;
+  margin: 0;
+  padding: 0 .75rem;
+}
+
+.label_width_small {
+  width: 100%;
+  max-width: 6.4rem;
+  overflow: hidden;
+}
+label {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 7px;
+}
+
+.ui_input_group > :last-child {
+  border-radius: $input-border-radius $input-border-radius 0;
+}
+
+.ui_input_group > input, .ui_input_group > .ui_number_input, .ui_input_group > .ui_range, .ui_input_group > .ui_color_sample {
+  border-radius: 0;
+  height: auto;
+  min-width: 0;
+}
+input[type="text"], select, input[type="number"], textarea {
+  background: $input-background-color;
+  border: 1px solid $input-border-color;
+  border-radius: $input-border-radius;
+  color: $input-text-color;
+  padding: 3px 5px;
+  font-size: 13px;
+}
+
+.block_section {
+  margin: .75rem 0;
+}
+
+.ui_swatches {
+  display: flex;
+  justify-content: center;
+}
+
+.ui_swatches .swatch_group.rows_3 {
+  max-height: calc(6.9rem - 2px);
+}
+.ui_swatches .swatch_group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: auto;
+  border-radius: $input-border-radius;
+  border: 1px solid $border-color;
+  border-right: transparent;
+  box-shadow: 0 1px 0 0 rgba(1, 1, 1, 0.1);
+  overflow: hidden;
+  max-height: calc(2.3rem);
+}
+
+.ui_swatches .swatch_group.cols_7 .swatch {
+  width: 14.29%;
+}
+.ui_swatches .swatch.active {
+  box-shadow: 0 0 0 3px $button-text-color-active inset, 0 0 0 4px $border-color inset;
+}
+.ui_swatches .swatch {
+  background: white;
+  display: inline-block;
+  position: relative;
+  border: 1px solid $border-color;
+  border-radius: 0;
+  box-shadow: 0 0 0 1px white inset;
+  margin: -1px 0 0 -1px;
+  padding: 0;
+  height: 2.3rem;
+  min-width: 2.3rem;
+  flex-grow: 1;
+}
+
+
+
+.ui_input_grid.stacked:first-child {
+  margin-top: 0;
+}
+.ui_input_grid.stacked {
+  margin: .75rem 0;
+}
+.ui_input_grid {
+  border-radius: $input-border-radius;
+  box-shadow: 0 1px 0 0 rgba(1, 1, 1, 0.1);
+}
+
+.ui_input_grid > .ui_input_group:first-child {
+  margin-top: 0;
+}
+.ui_input_grid > .ui_input_group {
+  margin: -1px 0;
+}
+.ui_input_group {
+  display: flex
+;
+  flex-direction: row;
+  min-height: 2.4rem;
+  width: 100%;
+}
+
+.ui_input_grid > .ui_input_group:first-child > :first-child {
+  border-radius: $input-border-radius 0 0 0;
+}
+
+.ui_input_grid > .ui_input_group > :first-child, .ui_input_grid > .ui_input_group > :last-child {
+  border-radius: 0;
+}
+.ui_input_group > :first-child {
+  border-radius: $input-border-radius 0 0 $input-border-radius;
+}
+.ui_input_group > label {
+  display: flex
+;
+  align-items: center;
+  border: 1px solid $input-group-border-color;
+  border-right: 0;
+  margin: 0;
+  padding: 0 .75rem;
+}
+.text_red {
+  color: $text-color-red;
+}
+
+.text_green {
+  color: $text-color-green;
+}
+
+.text_blue {
+  color: $text-color-blue;
+}
+
+.label_width_character {
+  width: 100%;
+  max-width: 2.88rem;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+label {
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 7px;
+}
+
+.ui_input_group > input, .ui_input_group > .ui_number_input, .ui_input_group > .ui_range, .ui_input_group > .ui_color_sample {
+  border-radius: 0;
+  height: auto;
+  min-width: 0;
+}
+
+.ui_range {
+  display: flex
+;
+  flex-direction: row;
+  background: $input-background-color;
+  border: 1px solid $input-border-color;
+  border-radius: 1000px;
+  height: 1.8rem;
+  overflow: visible;
+  outline: 0;
+  padding: 0 calc($range-handle-width / 2);
+  position: relative;
+  width: 100%;
+}
+
+.ui_range .padded_track {
+  position: absolute;
+  left: calc($range-handle-width / 2);
+  right: calc($range-handle-width / 2);
+  top: 0;
+  bottom: 0;
+}
+
+.ui_range .bar {
+  overflow: visible;
+  position: relative;
+  width: 0%;
+}
+
+.ui_range.color_picker .handle {
+  background: none;
+  border: none;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: auto;
+  top: 0;
+  bottom: 0;
+  transform: translateX(50%);
+}
+.ui_range .handle {
+  background: $input-text-color;
+  border: 1px solid $border-color;
+  border-radius: 1000px;
+  box-sizing: border-box;
+  cursor: col-resize;
+  display: block;
+  height: 1.8rem;
+  width: $range-handle-width;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(50%, -50%);
+}
+
+.ui_range.color_picker .handle::before {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: .5rem solid transparent;
+  border-right: .5rem solid transparent;
+  border-top: .7rem solid white;
+}
+
+.ui_range.color_picker .handle::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: .5rem solid transparent;
+  border-right: .5rem solid transparent;
+  border-bottom: .7rem solid black;
+}
+
+
+.ui_input_grid > .ui_input_group:first-child > :last-child {
+  border-radius: 0 $input-border-radius 0 0;
+}
+.ui_input_grid > .ui_input_group > :first-child, .ui_input_grid > .ui_input_group > :last-child {
+  border-radius: 0;
+}
+.ui_input_group > .ui_range + input, .ui_input_group > .ui_range + .ui_number_input {
+  margin-left: -1px;
+}
+.ui_input_group > :last-child {
+  border-radius: 0 $input-border-radius $input-border-radius 0;
+}
+.ui_input_group > input, .ui_input_group > .ui_number_input, .ui_input_group > .ui_range, .ui_input_group > .ui_color_sample {
+  border-radius: 0;
+  height: auto;
+  min-width: 0;
+}
+.ui_number_input.input_cw_3 {
+  max-width: calc(4.25rem + $number-input-arrow-width);
+}
+.ui_number_input {
+  border: 1px solid $input-border-color;
+  border-radius: $input-border-radius;
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.input_cw_3 {
+  max-width: 4.25rem;
+}
+
+.ui_number_input > input[type="number"] ::-webkit-outer-spin-button{
+  border: none;
+  border-radius: 0;
+  -moz-appearance: textfield;
+  appearance: textfield;
+  padding-right: 2.5rem;
+  padding-right: calc($number-input-arrow-width + .5rem);
+  width: 100%;
+  -webkit-appearance: none !important;
+  margin: 0; /* override default margin */
+}
+
+
+.ui_number_input > .increase_number {
+  right: 0;
+  top: 0;
+  bottom: 50%;
+  border-top: none;
+}
+.ui_number_input > .increase_number, .ui_number_input > .decrease_number {
+  display: flex
+;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 2rem;
+  width: $number-input-arrow-width;
+  border-radius: 0;
+  border: 1px solid $input-border-color;
+  border-right: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ui_number_input > .increase_number::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid $input-text-color;
+}
+
+.ui_number_input > .decrease_number {
+  right: 0;
+  top: calc(50% - 1px);
+  bottom: 0;
+  border-bottom: none;
+}
+.ui_number_input > .increase_number, .ui_number_input > .decrease_number {
+  display: flex
+;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 2rem;
+  width: $number-input-arrow-width;
+  border-radius: 0;
+  border: 1px solid $input-border-color;
+  border-right: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ui_number_input > .decrease_number::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 3px solid $input-text-color;
+}

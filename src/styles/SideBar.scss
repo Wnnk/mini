@@ -1,0 +1,93 @@
+@use 'var' as *;
+
+.sidebar_left {
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  grid-area: sidebar_left;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: $section-background-color;
+  padding: 0 5px 5px 0;
+  margin-right: 5px;
+  overflow: hidden;
+  align-self: start;
+  width: 40px;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+.sidebar_left .item {
+  position: relative;
+  display: block;
+  background-color: $area-background-color;
+  height: 25px;
+  width: 30px;
+  margin: 5px 0 0 5px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+
+.sidebar_left .item:after {
+  position: absolute;
+  content: '';
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  filter: $menu-icons-filter;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+}
+
+.sidebar_left .select:after {
+  background-image: url(../assets/select.svg);
+}
+.sidebar_left .selection::after {
+  background-image: url(../assets/selection.svg);
+}
+.sidebar_left .brush::after {
+  background-image: url(../assets/brush.svg);
+}
+.sidebar_left .pencil::after {
+  background-image: url(../assets/pencil.svg);
+}
+.sidebar_left .pick_color::after {
+  background-image: url(../assets/pick_color.svg);
+}
+.sidebar_left .erase::after {
+  background-image: url(../assets/erase.svg);
+}
+.sidebar_left .magic_erase::after {
+  background-image: url(../assets/magic_erase.svg);
+}
+.sidebar_left .fill::after {
+  background-image: url(../assets/fill.svg);
+}
+.sidebar_left .shape::after {
+  background-image: url(../assets/shape.svg);
+}
+.sidebar_left .text::after {
+  background-image: url(../assets/text.svg);
+}
+.sidebar_left .media::after {
+  background-image: url(../assets/media.svg);
+}
+.sidebar_left .crop::after {
+  background-image: url(../assets/crop.svg);
+}
+.sidebar_left .blur::after {
+  background-image: url(../assets/blur.svg);
+}
+.sidebar_left .sharpen::after {
+  background-image: url(../assets/sharpen.svg);
+}
+.sidebar_left .desaturate::after {
+  background-image: url(../assets/desaturate.svg);
+}
+
+
+
+

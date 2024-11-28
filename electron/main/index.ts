@@ -55,8 +55,12 @@ async function createWindow() {
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation
       // contextIsolation: false,
     },
+    width: 1000,
+    height: 800,
   })
-
+  /* 隐藏菜单栏 */
+  win.setMenu(null);
+  
   if (VITE_DEV_SERVER_URL) { // #298
     win.loadURL(VITE_DEV_SERVER_URL)
     // Open devTool if the app is not packaged

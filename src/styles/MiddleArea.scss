@@ -1,0 +1,87 @@
+@use 'var.scss' as *;
+
+.middle_area {
+  position: relative;
+  -ms-grid-row: 2;
+  -ms-grid-column: 2;
+  grid-area: main;
+}
+
+.ruler_left {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 20px;
+  background-color: #ccc;
+}
+
+.ruler_top {
+  display: none;
+  position: absolute;
+  left: 20px;
+  top: 0;
+  background-color: #ccc;
+}
+
+.main_wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.canvas_wrapper {
+  position: relative;
+}
+
+#mouse {
+  position: absolute;
+  pointer-events: none;
+  width: 10px;
+  height: 10px;
+  z-index: 10;
+}
+
+#mouse.circle {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+}
+
+.transparent-grid.white {
+  background: white;
+}
+
+.transparent-grid {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
+  // background: url(images/icons/grid.png) repeat top left;
+  // background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAQElEQVQ4T2N89+7dfwYigKCgIBGqGBgYRw3EGU6jYYgzaIZAsvn//z9ROeX9+/fE5ZRRA3GG02gY4s4pgz7ZAAAnSWvHPkHXaAAAAABJRU5ErkJggg==) repeat top left;
+  z-index: 1;
+  image-rendering: pixelated;
+}
+
+.loaded .canvas_wrapper canvas {
+  border: 1px solid $border-color;
+}
+.canvas_wrapper canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: content-box;
+  font-kerning: normal !important;
+}
+
+canvas {
+  outline: none;
+  -webkit-touch-callout: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

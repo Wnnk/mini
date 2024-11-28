@@ -1,0 +1,59 @@
+@use 'var' as *;
+
+.details-content {
+  height: 206px;
+  overflow-y: auto;
+}
+
+.block.details .row {
+  clear: both;
+  margin-bottom: 4px;
+  min-height: 23px;
+}
+
+.block.details input[type="number"] {
+  width: 70px;
+  padding: 3px 5px;
+  float: right;
+}
+
+.details input {
+  padding: 5px 10px;
+}
+
+.block.details button.reset {
+  position: relative;
+  width: 25px;
+  float: right;
+  margin-right: 3px;
+  overflow: hidden;
+  opacity: 0.5;
+  color: transparent;
+}
+
+.block.details button {
+  width: calc(100% - 70px);
+  height: 23px;
+  border: 1px solid #444;
+}
+.block.details input[type="number"] {
+  width: 70px;
+  padding: 3px 5px;
+  float: right;
+}
+
+.details input {
+  padding: 5px 10px;
+}
+
+.block.details button.reset:after {
+  position: absolute;
+  content: '';
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: url(../assets/refresh.svg) no-repeat center center;
+  background-size: auto 14px;
+  filter: $menu-icons-filter;
+}
