@@ -59,6 +59,11 @@
   border-color: transparent transparent $text-color-muted transparent;
 }
 
+.block h2.toggled:before {
+  border-width: 5px 4px 0 4px;
+  border-color: $text-color-muted transparent transparent transparent;
+}
+
 
 .canvas_preview_wrapper {
   position: relative;

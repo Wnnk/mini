@@ -1,4 +1,9 @@
 <script setup lang='ts'>
+import { toRefs } from 'vue';
+import { ref, computed, defineProps } from 'vue'
+import { useAppStore } from '../../store/app';
+const appStore = useAppStore();
+const toggle = computed(() => appStore.rightSideToggle[0]);
 const detailItems = [
   {id: 'zoom_less', title: '缩小'},
   {id: 'zoom_100', title: '重置'},
@@ -9,8 +14,8 @@ const detailItems = [
 
 <template>
   <div class="preview block">
-    <h2 class=" trn toggle">预览</h2>
-    <div id="toggle_preview">
+    <h2 :class="['trn','toggle', {toggled: !toggle}] ">预览</h2>
+    <div id="toggle_preview" v-show="toggle">
       <div class="canvas_preview_wrapper">
         <div class="transparent-grid white" id="canvas_preview_background">
 

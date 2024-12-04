@@ -1,25 +1,40 @@
 <script setup lang='ts'>
 import { onMounted, reactive, ref,onUnmounted } from 'vue';
 import { useMousePosition } from '../hooks/useMousePosition';
-
-
-const canvasOption = reactive({
-  canvas: null as HTMLCanvasElement | null,
-  ctx: null as CanvasRenderingContext2D | null,
-})
+import { useAppStore } from '../store/app';
+import { useTools } from '../hooks/tools/index';
+import Konva from 'konva';
 
 
 
+
+
+const appStore = useAppStore();
+
+
+const stage = ref<any>(null);
+const layer = ref<any>(null);
 
 onMounted(() => {
-  canvasOption.canvas = document.getElementById('canvas_minipaint') as HTMLCanvasElement;
-  if (canvasOption.canvas) {
-    canvasOption.ctx = canvasOption.canvas.getContext('2d') as CanvasRenderingContext2D;
-    useMousePosition(canvasOption.canvas);
-  } else {
-    console.error('canvas not found');
-  }
+  useMousePosition(document.getElementById('canvas_minipaint'));
+  stage.value = new Konva.Stage({
+    container: 'canvas_minipaint',
+    width: appStore.canvas.width,
+    height: appStore.canvas.height,
+  });
+  layer.value = new Konva.Layer();
 
+
+
+
+
+
+
+
+
+
+  stage.value.add(layer.value);
+//  useTools(stage.value, layer.value);
 });
 
 
@@ -30,10 +45,18 @@ onMounted(() => {
     <canvas class="ruler_left" id="ruler_left"></canvas>
     <canvas class="ruler_top" id="ruler_top"></canvas>
     <div class="main_wrapper" id="main_wrapper" >
-      <div class="canvas_wrapper" id="canvas_wrapper" style="width: 560px; height: 420px;">
+      <div class="canvas_wrapper" id="canvas_wrapper" :style="`width:${appStore.canvas.width} ; height: ${appStore.canvas.height};`">
         <!-- <div id="mouse" class="circle"></div> -->
         <div class="transparent-grid white" id="canvas_minipaint_background"></div>
-        <canvas id="canvas_minipaint" width="560" height="420"></canvas>
+        <div 
+          id="canvas_minipaint" 
+          :style="`width:${appStore.canvas.width} ; height: ${appStore.canvas.height};`"
+          @mousedown="() => {
+            if (!appStore.isEdit) {
+              useTools(stage, layer);
+            }
+          }"
+          ></div>
       </div>
     </div>
   </div>

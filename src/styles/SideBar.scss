@@ -42,6 +42,15 @@
   background-size: 20px 20px;
 }
 
+.sidebar_left .item.active {
+  background-color: $background-color-active;
+  color: $text-color-active;
+}
+
+.sidebar_left .item.active:after {
+  filter: $menu-icons-filter-active;
+}
+
 .sidebar_left .select:after {
   background-image: url(../assets/select.svg);
 }

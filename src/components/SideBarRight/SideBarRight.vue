@@ -4,15 +4,18 @@ import Details from './Details.vue';
 import Info from './Info.vue';
 import Preview from './Preview.vue';
 import Layers from './Layers.vue';
+import { ref } from 'vue';
+
+
 </script>
 
 <template>
   <div class="sidebar_right">
-    <Preview />
-    <ColorPick />
+    <Preview  />
+    <ColorPick  />
     <Info />
-    <Details  />
-    <Layers />
+    <Details />
+    <Layers  />
   </div>
 </template>
 

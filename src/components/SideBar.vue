@@ -1,4 +1,9 @@
 <script setup lang='ts'>
+import { ref } from 'vue';
+import { useAppStore } from '../store/app';
+
+const appStore = useAppStore();
+
 const sidebarItems = [
   {id: 'select', title: '选择对象工具' },
   {id: 'selection', title: '选择工具' },
@@ -19,12 +24,27 @@ const sidebarItems = [
   {id: 'desaturate', title: '饱和度' }
 ]
 
+const toolActive = ref<string>('pencil');
+/** 
+ * @description: 点击工具栏按钮切换工具
+ * @param {string} id 工具栏按钮id
+**/
+const switchTool = (id: string) => {
+  toolActive.value = id;
+  appStore.tool = id;
+  console.log(appStore.tool);
+}
+
 
 </script>
 
 <template>
   <div class="sidebar_left" id="tools_container">
-    <span v-for="item in sidebarItems" :key="item.id" :class="['item', 'brn', item.id]">
+    <span 
+      v-for="item in sidebarItems" :key="item.id" 
+      :class="['item', 'brn', item.id, toolActive === item.id? 'active' : '']"
+      @click="switchTool(item.id)"
+    >
      
     </span>
   </div>

@@ -1,10 +1,15 @@
 <script setup lang='ts'>
+import { ref, computed, defineProps } from 'vue'
+import { useAppStore } from '../../store/app';
+const appStore = useAppStore();
+const toggle = computed(() => appStore.rightSideToggle[4]);
+
 </script>
 
 <template>
   <div class="layers block">
-    <h2 class="trn" data-trn-key="图层">图层</h2>
-    <div class="content" id="layers_base">
+    <h2 :class="['trn', 'toggle', {toggled: !toggle}]" data-trn-key="图层">图层</h2>
+    <div class="content" id="layers_base" v-show="toggle">
       <button type="button" class="layer_add" id="insert_layer" title="Insert new layer">+</button>
       <button type="button" class="layer_duplicate" id="delete_layer" title="Duplicate layer">D</button>
       <button type="button" class="layer_raster" id="layer_raster" title="Convert layer to raster">R</button>

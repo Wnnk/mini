@@ -1,21 +1,43 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from "vue";
+import InputGroup from "./InputGroup.vue";
+import { useAppStore } from "../../store/app";
+
+const appStore = useAppStore();
+const toggle = computed(() => appStore.rightSideToggle[1]);
 import {
-  hslToRgb,
-  rgbToHex,
-  hslToHex,
-  rgbToHsl,
   hsvToRgb,
-  hexToRgb,
+  hsvToHex,
 } from "../../utils/color";
 
+
+
+
 onMounted(() => {
-  const color = "#a55959";
-  /* hexToRgb √ */
+  
+  /* 
+  hexToRgb   √ rgbToHex    √
+  hsvToRgb √ rgbToHsv √
+  hexToRgb   √ 
+  hslToRgb   × rgbToHsl    ×
+  hsvToHsl 
+  */
 });
 
-const buttonGroup = ref([true, true, true]);
+const buttonGroup = ref([true, false, true]);
+/** 
+ * @description： 显示/隐藏功能板
+ * @param index: number 功能板索引
+**/
+const toggleColorPicker = (index: number) => {
+  buttonGroup.value[index] =!buttonGroup.value[index];
+}
 
+
+
+/** 
+ * @description: 初始化记色板
+  */
 const initSwatches = () => {
   const swatches = [];
   for (let i = 0; i < 21; i++) {
@@ -23,87 +45,55 @@ const initSwatches = () => {
       color: "grb(255, 255, 255)",
     });
   }
+  swatches[0].color = "rgb(0, 0, 0)";
   return swatches;
 };
 const swatches = ref(initSwatches());
 const swatchActive = ref(0);
-const hex = ref("#ffffff");
-const rgb = ref({ r: 255, g: 255, b: 255 });
-const hsl = ref<{ h: number; s: number; l: number }>({ h: 0, s: 100, l: 100 });
 
-const inputGroup = ref([
-  {
-    label: "rgb_r_label",
-    title: "Red",
-    class: "text_red",
-    rangeId: "rgb_r_range",
-    trackBackground:
-      "background: linear-gradient(to right, rgb(0, 255, 255), rgb(255, 255, 255));",
-    inputId: "rgb_r",
-    value: rgb.value.r,
-    text: "Red",
-  },
-  {
-    label: "rgb_g_label",
-    title: "Green",
-    class: "text_green",
-    rangeId: "rgb_g_range",
-    trackBackground:
-      "background: linear-gradient(to right, rgb(255, 0, 255), rgb(255, 255, 255));",
-    inputId: "rgb_g",
-    value: rgb.value.g,
-    text: "Green",
-  },
-  {
-    label: "rgb_b_label",
-    title: "Blue",
-    class: "text_blue",
-    rangeId: "rgb_b_range",
-    trackBackground:
-      "background: linear-gradient(to right, rgb(255, 255, 0), rgb(255, 255, 255));",
-    inputId: "rgb_b",
-    value: rgb.value.b,
-    text: "Blue",
-  },
-]);
+watch(appStore.hsv, (newVal) => {
+  swatches.value[swatchActive.value].color = `${hsvToHex(newVal.h, newVal.s, newVal.v)}`;
+})
 
-const colorPickStyle = ref({
-  left: "0",
-  top: "0",
+
+
+const secondaryPickHandle = ref({
+  left: "0%",
+  top: "100%",
 });
 
 const barStyle = ref({
   height: "100%",
 });
 
-const hsv = ref({
-  h: 0,
-  s: 1,
-  v: 1,
-});
 
 const secondaryPickStyle = ref({
   background: "rgb(255, 0, 0)",
 });
+const primaryRange = ref(0);
+const setHsv = ({h,s,v}: {h: number, s: number, v: number}) => {
+  appStore.hsv.h = Math.max(0, Math.min(1,h));
+  appStore.hsv.s = Math.max(0, Math.min(1, s));
+  appStore.hsv.v = Math.max(0, Math.min(1, v));
+  /* 色相条数值 */
+  primaryRange.value = (1 - appStore.hsv.h) * 360;
+  /* 改变主色条 */
+  secondaryPickStyle.value.background = `${hsvToHex(h, 1, 1)}`;
+  /* 次色块选中位置改变 */
+  secondaryPickHandle.value.left = `${appStore.hsv.s * 100}%`;
+  secondaryPickHandle.value.top = `${(1 - appStore.hsv.v) * 100}%`;
+}
 
 const colorPick = (event: MouseEvent) => {
   const picker = document.getElementsByClassName("secondary_pick");
-
   const rect = picker[0]!.getBoundingClientRect();
-  const offsetX = event.clientX - rect.left;
-  const offsetY = event.clientY - rect.top;
-  const x = Math.floor((offsetX / rect.width) * 100);
-  const y = Math.floor((offsetY / rect.height) * 100);
-  colorPickStyle.value = {
-    left: `${x}%`,
-    top: `${y}%`,
-  };
-  hsv.value.s = x / 100;
-  hsv.value.v = (100 - y) / 100;
-  const { r, g, b } = hslToRgb(hsv.value.h, hsv.value.s, hsv.value.v);
-  hex.value = rgbToHex(r, g, b);
-  const hsl = hslToHex(hsv.value.h, hsv.value.s, hsv.value.v);
-  const { h, s, l } = rgbToHsl(r, g, b);
+  const offsetX = (event.clientX - rect.left) / (rect.right - rect.left);
+  const offsetY = (event.clientY - rect.top) / (rect.bottom - rect.top);
+  setHsv({
+    h:appStore.hsv.h,
+    s:offsetX,
+    v:(1 - offsetY)
+  });
 };
 
 /**
@@ -112,29 +102,29 @@ const colorPick = (event: MouseEvent) => {
 const adjustHue = (event: MouseEvent) => {
   const picker = document.getElementsByClassName("primary_pick");
   const rect = picker[0]!.getBoundingClientRect();
-  const offsetY = event.clientY - rect.top;
-
-  const y = Math.max(0, Math.min(100, 100 - (offsetY / rect.height) * 100));
-  barStyle.value = {
-    height: `${y}%`,
-  };
-  hsv.value.h = Math.floor((offsetY / rect.height) * 360);
-
-  const { r, g, b } = hsvToRgb(hsv.value.h, 1, 0.5);
-  secondaryPickStyle.value.background = `rgb(${r}, ${g}, ${b})`;
-  console.log(hsv.value.h, secondaryPickStyle.value.background);
+  const range = rect.top - rect.bottom;
+  const inRange = (event.clientY - rect.bottom)
+  const ratio = Math.max(0, Math.min(1, inRange / range));
+  primaryRange.value = ratio * 360;
+  barStyle.value.height = `${ratio * 100}%`;
+  setHsv({
+    h:  1 -  (primaryRange.value / 360),
+    s: appStore.hsv.s,
+    v: appStore.hsv.v
+  })
 };
 </script>
 
 <template>
   <div class="colors block">
-    <h2 class="trn toggle">颜色</h2>
-    <div class="content" id="toggle_colors">
+    <h2 :class="['trn','toggle', {toggled: !toggle}] ">颜色</h2>
+    <div class="content" id="toggle_colors" v-show="toggle">
       <div class="ui_flex_group justify_content_space_between stacked">
         <div
           id="selected_color_sample"
           class="ui_color_sample"
           title="Current Color Preview"
+          :style="`background-color: ${hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v)};`"
         ></div>
         <div class="ui_button_group">
           <!-- Color Picker -->
@@ -142,6 +132,7 @@ const adjustHue = (event: MouseEvent) => {
             id="toggle_color_picker_section_button"
             title="Toggle Color Picker"
             :aria-pressed="buttonGroup[0]"
+            @click="toggleColorPicker(0)"
           >
             <span class="sr_only">Toggle Color Picker</span>
             <svg
@@ -173,6 +164,7 @@ const adjustHue = (event: MouseEvent) => {
             :aria-pressed="buttonGroup[1]"
             class="ui_icon_button"
             title="Toggle Color Channels"
+            @click="toggleColorPicker(1)"
           >
             <span class="sr_only">Toggle Color Channels</span>
             <svg
@@ -203,6 +195,7 @@ const adjustHue = (event: MouseEvent) => {
             :aria-pressed="buttonGroup[2]"
             class="ui_icon_button"
             title="Toggle Swatches"
+            @click="toggleColorPicker(2)"
           >
             <span class="sr_only">Toggle Swatches</span>
             <svg
@@ -253,7 +246,7 @@ const adjustHue = (event: MouseEvent) => {
           >
             <div class="saturation_gradient"></div>
             <div class="value_gradient"></div>
-            <div class="handle" :style="colorPickStyle"></div>
+            <div class="handle" :style="secondaryPickHandle"></div>
           </div>
           <div class="primary_pick" @click="adjustHue">
             <div
@@ -262,7 +255,7 @@ const adjustHue = (event: MouseEvent) => {
               role="slider"
               aria-valuemin="0"
               aria-valuemax="360"
-              :aria-valuenow="hsv.h"
+              :aria-valuenow="appStore.hsv.h * 360"
             >
               <div
                 class="padded_track"
@@ -288,77 +281,37 @@ const adjustHue = (event: MouseEvent) => {
           <label id="color_hex_label" title="Hex" class="label_width_small trn"
             >Hex</label
           >
-          <input id="color_hex" :value="hex" maxlength="7" type="text" />
+          <input id="color_hex" :value="hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v)" maxlength="7" type="text" />
+        </div>
+      </div>
+
+      <div
+        id="color_section_channels"
+        class="block_section color_section_channels"
+        v-show="buttonGroup[1]"
+        >
+        <div class="ui_input_grid stacked">
+  
+          <InputGroup label="rgb_r_label" title="Red" 
+          className="label_width_character text_red" 
+          :value="hsvToRgb(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v).r"
+          id:="rgb_r"
+          />
+          <InputGroup label="rgb_g_label" title="Green" 
+          className="label_width_character text_green" 
+          :value="hsvToRgb(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v).g"
+          id:="rgb_g"
+          />
+          <InputGroup label="rgb_b_label" title="Blue" 
+          className="label_width_character text_blue" 
+          :value="hsvToRgb(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v).b"
+          id:="rgb_b"
+          />
         </div>
       </div>
     </div>
 
-    <div
-      id="color_section_channels"
-      class="block_section color_section_channels"
-    >
-      <div class="ui_input_grid stacked">
-        <div
-          class="ui_input_group"
-          v-for="input in inputGroup"
-          :key="input.inputId"
-        >
-          <label
-            :id="input.label"
-            :title="input.title"
-            :class="['label_width_character', input.class]"
-          >
-            <strong
-              >{{ input.text[0]
-              }}<span class="sr_only">{{
-                input.text.substring(1)
-              }}</span></strong
-            >
-          </label>
-          <div
-            class="ui_range color_picker"
-            tabindex="0"
-            role="slider"
-            aria-valuemin="0"
-            aria-valuemax="255"
-            :aria-valuenow="input.value"
-            :id="input.rangeId"
-          >
-            <div
-              class="padded_track"
-              style="
-                background: linear-gradient(
-                  to right,
-                  rgb(0, 143, 136),
-                  rgb(255, 143, 136)
-                );
-              "
-            ></div>
-            <div class="bar" style="width: 33.3333%">
-              <div class="handle"></div>
-            </div>
-          </div>
-          <div
-            class="ui_number_input input_cw_3"
-            :id="input.inputId + '_range'"
-          >
-            <input
-              type="number"
-              :aria-labelledby="input.label"
-              max="255"
-              step="1"
-              :value="rgb.r"
-            />
-            <button class="increase_number" tabindex="-1">
-              <span class="sr_only">Increase</span>
-            </button>
-            <button class="decrease_number" tabindex="-1">
-              <span class="sr_only">Decrease</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+ 
   </div>
 </template>
 

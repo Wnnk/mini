@@ -1,7 +1,8 @@
 import { onMounted, reactive, ref,onUnmounted } from 'vue';
 import { useAppStore } from '../store/app';
 
-export const useMousePosition = (canvas: HTMLCanvasElement | null) => {
+
+export const useMousePosition = (canvas: HTMLElement | null) => {
   const appStore = useAppStore();
 
   const getMousePosition = (event: MouseEvent) => {
@@ -10,6 +11,7 @@ export const useMousePosition = (canvas: HTMLCanvasElement | null) => {
     const x = Math.floor(event.clientX - rect.left);
     const y = Math.floor(event.clientY - rect.top);
     appStore.info = { x, y };
+
   };
 
   const mouseEnterCanvas = (event: MouseEvent) => {
