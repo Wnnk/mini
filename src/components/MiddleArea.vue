@@ -24,17 +24,23 @@ onMounted(() => {
   });
   layer.value = new Konva.Layer();
 
+// const line = new Konva.Line({
+//   points: [100, 100, 200, 200],
+//   stroke: 'black',
+//   dash: [10,5],
+//   strokeWidth: 2,
+// })
 
+// layer.value.add(line);
 
-
-
+// line.setAttr('points',[200,200,300,300])
 
 
 
 
 
   stage.value.add(layer.value);
-//  useTools(stage.value, layer.value);
+
 });
 
 

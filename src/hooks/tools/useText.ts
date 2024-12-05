@@ -1,16 +1,17 @@
 import { watch } from "vue"
 import { useAppStore } from "../../store/app"
 import Konva from "konva"
+import { hsvToHex } from "../../utils/color"
 
 /**
  * 创建编辑区域
  * @param node
  */
-export function useText(stage: Konva.Stage) {
+export function useText(stage: Konva.Stage, layer: Konva.Layer) {
   const appStore = useAppStore()
   const { x, y } = appStore.info
-  const layer = new Konva.Layer()
-  stage.add(layer)
+
+  // stage.add(layer)
   /** 
    * @description 编辑文本区域
    */
@@ -23,6 +24,7 @@ export function useText(stage: Konva.Stage) {
       fontSize: 24,
       fontFamily: "Arial",
       draggable: true,
+      color: `${hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v)}`
     })
     layer.add(text)
     tr = new Konva.Transformer({
@@ -38,8 +40,10 @@ export function useText(stage: Konva.Stage) {
   }
   const text = editArea()
   appStore.isEdit = true
-
+  stage.add(layer)
+  
   let currentText = ""
+  /* 使用input记录输入文本,实现支持中文输入 */
   const input = document.createElement('input')
   input.type = 'text'
   input.style.position = 'absolute'

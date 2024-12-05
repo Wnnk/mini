@@ -4,12 +4,11 @@ import { ref, watch } from "vue";
 import { hsvToHex } from "../../utils/color";
 
 
-export const usePencil = (stage:Konva.Stage) => {
+export const usePencil = (stage:Konva.Stage,layer:Konva.Layer) => {
   const appStore = useAppStore();
   
   if (appStore.tool !== "pencil") return;
-  const layer = new Konva.Layer();
-  stage.add(layer);
+
   const isDrawing = ref(false);
   
   let line: Konva.Line | null = null;
@@ -32,7 +31,6 @@ export const usePencil = (stage:Konva.Stage) => {
     const newPoints = line.points().concat([x, y]);
     line.points(newPoints);
     layer.batchDraw();
-    // stage.add(layer);
   }
 
   const endDraw = () => {
@@ -41,17 +39,21 @@ export const usePencil = (stage:Konva.Stage) => {
 
  
     
-  stage.on("mousedown", startDraw);
-  stage.on("mousemove", draw);
-  stage.on("mouseup", endDraw);
-  stage.on("mouseleave", endDraw);
+  // stage.on("mousedown", startDraw);
+  // stage.on("mousemove", draw);
+  // stage.on("mouseup", endDraw);
+  // stage.on("mouseleave", endDraw);
+  document.addEventListener("mousedown", startDraw);
+  document.addEventListener("mousemove", draw);
+  document.addEventListener("mouseup", endDraw);
+  document.addEventListener("mouseleave", endDraw);
 
 
   watch(() => [appStore.tool], () => {
-    stage.off("mousedown", startDraw);
-    stage.off("mousemove", draw);
-    stage.off("mouseup", endDraw);
-    stage.off("mouseleave", endDraw);
+  document.removeEventListener("mousedown", startDraw);
+  document.removeEventListener("mousemove", draw);
+  document.removeEventListener("mouseup", endDraw);
+  document.removeEventListener("mouseleave", endDraw);
   });
 
 
