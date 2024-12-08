@@ -5,16 +5,9 @@ import { useAppStore } from "../../store/app";
 
 const appStore = useAppStore();
 const toggle = computed(() => appStore.rightSideToggle[1]);
-import {
-  hsvToRgb,
-  hsvToHex,
-} from "../../utils/color";
-
-
-
+import { hsvToRgb, hsvToHex } from "../../utils/color";
 
 onMounted(() => {
-  
   /* 
   hexToRgb   √ rgbToHex    √
   hsvToRgb √ rgbToHsv √
@@ -25,19 +18,17 @@ onMounted(() => {
 });
 
 const buttonGroup = ref([true, false, true]);
-/** 
+/**
  * @description： 显示/隐藏功能板
  * @param index: number 功能板索引
-**/
+ **/
 const toggleColorPicker = (index: number) => {
-  buttonGroup.value[index] =!buttonGroup.value[index];
-}
+  buttonGroup.value[index] = !buttonGroup.value[index];
+};
 
-
-
-/** 
+/**
  * @description: 初始化记色板
-  */
+ */
 const initSwatches = () => {
   const swatches = [];
   for (let i = 0; i < 21; i++) {
@@ -51,11 +42,18 @@ const initSwatches = () => {
 const swatches = ref(initSwatches());
 const swatchActive = ref(0);
 
-watch(appStore.hsv, (newVal) => {
-  swatches.value[swatchActive.value].color = `${hsvToHex(newVal.h, newVal.s, newVal.v)}`;
-})
-
-
+watch(
+  () => appStore.hsv,
+  (newVal) => {
+    swatches.value[swatchActive.value].color = `${hsvToHex(
+      newVal.h,
+      newVal.s,
+      newVal.v
+    )}`;
+    console.log("swatches");
+  },
+  { deep: true }
+);
 
 const secondaryPickHandle = ref({
   left: "0%",
@@ -66,13 +64,12 @@ const barStyle = ref({
   height: "100%",
 });
 
-
 const secondaryPickStyle = ref({
   background: "rgb(255, 0, 0)",
 });
 const primaryRange = ref(0);
-const setHsv = ({h,s,v}: {h: number, s: number, v: number}) => {
-  appStore.hsv.h = Math.max(0, Math.min(1,h));
+const setHsv = ({ h, s, v }: { h: number; s: number; v: number }) => {
+  appStore.hsv.h = Math.max(0, Math.min(1, h));
   appStore.hsv.s = Math.max(0, Math.min(1, s));
   appStore.hsv.v = Math.max(0, Math.min(1, v));
   /* 色相条数值 */
@@ -82,7 +79,7 @@ const setHsv = ({h,s,v}: {h: number, s: number, v: number}) => {
   /* 次色块选中位置改变 */
   secondaryPickHandle.value.left = `${appStore.hsv.s * 100}%`;
   secondaryPickHandle.value.top = `${(1 - appStore.hsv.v) * 100}%`;
-}
+};
 
 const colorPick = (event: MouseEvent) => {
   const picker = document.getElementsByClassName("secondary_pick");
@@ -90,9 +87,9 @@ const colorPick = (event: MouseEvent) => {
   const offsetX = (event.clientX - rect.left) / (rect.right - rect.left);
   const offsetY = (event.clientY - rect.top) / (rect.bottom - rect.top);
   setHsv({
-    h:appStore.hsv.h,
-    s:offsetX,
-    v:(1 - offsetY)
+    h: appStore.hsv.h,
+    s: offsetX,
+    v: 1 - offsetY,
   });
 };
 
@@ -103,28 +100,32 @@ const adjustHue = (event: MouseEvent) => {
   const picker = document.getElementsByClassName("primary_pick");
   const rect = picker[0]!.getBoundingClientRect();
   const range = rect.top - rect.bottom;
-  const inRange = (event.clientY - rect.bottom)
+  const inRange = event.clientY - rect.bottom;
   const ratio = Math.max(0, Math.min(1, inRange / range));
   primaryRange.value = ratio * 360;
   barStyle.value.height = `${ratio * 100}%`;
   setHsv({
-    h:  1 -  (primaryRange.value / 360),
+    h: 1 - primaryRange.value / 360,
     s: appStore.hsv.s,
-    v: appStore.hsv.v
-  })
+    v: appStore.hsv.v,
+  });
 };
 </script>
 
 <template>
   <div class="colors block">
-    <h2 :class="['trn','toggle', {toggled: !toggle}] ">颜色</h2>
+    <h2 :class="['trn', 'toggle', { toggled: !toggle }]">颜色</h2>
     <div class="content" id="toggle_colors" v-show="toggle">
       <div class="ui_flex_group justify_content_space_between stacked">
         <div
           id="selected_color_sample"
           class="ui_color_sample"
           title="Current Color Preview"
-          :style="`background-color: ${hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v)};`"
+          :style="`background-color: ${hsvToHex(
+            appStore.hsv.h,
+            appStore.hsv.s,
+            appStore.hsv.v
+          )};`"
         ></div>
         <div class="ui_button_group">
           <!-- Color Picker -->
@@ -281,7 +282,12 @@ const adjustHue = (event: MouseEvent) => {
           <label id="color_hex_label" title="Hex" class="label_width_small trn"
             >Hex</label
           >
-          <input id="color_hex" :value="hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v)" maxlength="7" type="text" />
+          <input
+            id="color_hex"
+            :value="hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v)"
+            maxlength="7"
+            type="text"
+          />
         </div>
       </div>
 
@@ -289,29 +295,21 @@ const adjustHue = (event: MouseEvent) => {
         id="color_section_channels"
         class="block_section color_section_channels"
         v-show="buttonGroup[1]"
-        >
+      >
         <div class="ui_input_grid stacked">
-  
-          <InputGroup label="rgb_r_label" title="Red" 
-          className="label_width_character text_red" 
+          <InputGroup label="rgb_r_label" title="Red"
+          className="label_width_character text_red"
           :value="hsvToRgb(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v).r"
-          id:="rgb_r"
-          />
-          <InputGroup label="rgb_g_label" title="Green" 
-          className="label_width_character text_green" 
+          id:="rgb_r" /> <InputGroup label="rgb_g_label" title="Green"
+          className="label_width_character text_green"
           :value="hsvToRgb(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v).g"
-          id:="rgb_g"
-          />
-          <InputGroup label="rgb_b_label" title="Blue" 
-          className="label_width_character text_blue" 
+          id:="rgb_g" /> <InputGroup label="rgb_b_label" title="Blue"
+          className="label_width_character text_blue"
           :value="hsvToRgb(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v).b"
-          id:="rgb_b"
-          />
+          id:="rgb_b" />
         </div>
       </div>
     </div>
-
- 
   </div>
 </template>
 

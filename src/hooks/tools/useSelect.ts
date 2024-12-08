@@ -1,7 +1,6 @@
 import Konva from "konva";
 import { useAppStore } from "../../store/app";
 import { watch } from "vue";
-import { chownSync } from "original-fs";
 
 export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();

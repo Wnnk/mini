@@ -35,7 +35,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="middle_area" id="middle_area">
+  <div :class="['middle_area']" id="middle_area">
     <canvas class="ruler_left" id="ruler_left"></canvas>
     <canvas class="ruler_top" id="ruler_top"></canvas>
     <div class="main_wrapper" id="main_wrapper">

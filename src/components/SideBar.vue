@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useAppStore } from "../store/app";
+import "../styles/curour/ColorPicker.scss";
 
 const appStore = useAppStore();
 
@@ -43,6 +44,7 @@ const switchTool = (id: string) => {
         'brn',
         item.id,
         appStore.tool === item.id ? 'active' : '',
+        appStore.tool === 'pick_color' ? 'color-picker' : '',
       ]"
       @click="switchTool(item.id)"
     >
