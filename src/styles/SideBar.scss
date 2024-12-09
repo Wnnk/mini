@@ -98,5 +98,44 @@
 }
 
 
+#popups{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+#popups .popup .wide {
+  max-width: 840px;
+}
+#popups .popup {
+  position: fixed;
+  top:15vh;
+  left: calc(100vw / 2);
+  transform: translate(-50%, 0);
+  background-color: $block-background-color;
+  border: 1px solid $border-color;
+  width: 90vw;
+  max-height: calc(80vh);
+  margin: 0 auto 0 auto;
+  padding: 4rem 0 5rem 0;
+  box-shadow: 0 0 0 4000px rgba(0,0,0,0.3), 0 0 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  font-size: 13px;
+  overflow: hidden;
+}
 
-
+#popups .popup .close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  min-width: 0;
+  padding: 5px;
+  line-height: 0.5;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-right: 10px;
+  border: none;
+  background: none;
+  z-index: 1;
+}

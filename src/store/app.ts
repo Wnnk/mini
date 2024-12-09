@@ -16,6 +16,7 @@ export const useAppStore = defineStore("app", {
     },
     tool: "null",
     isEdit: false,
+    file: <File | null>null,
 
     listeners: [] as listenersType[],
   }),

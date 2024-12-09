@@ -5,6 +5,8 @@ import { useSelect } from "./useSelect";
 import { useSelection } from "./useSelection";
 import Konva from "konva";
 import { usePickColor } from "./usePickColor";
+import { useMedia } from "./useMedia";
+import { test } from "./test";
 
 export const useTools = (stage: Konva.Stage, layer: Konva.Layer) => {
   const tool = useAppStore().tool;
@@ -19,8 +21,10 @@ export const useTools = (stage: Konva.Stage, layer: Konva.Layer) => {
       return usePickColor(stage, layer);
     case "text":
       return useText(stage, layer);
+    case "media":
+      return useMedia(stage, layer);  
     default:
-      console.log("No tool selected");
+      test(stage);
       return null;
   }
 };

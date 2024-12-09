@@ -28,7 +28,6 @@ onMounted(() => {
 
   // layer.value.add(line);
 
-  // line.setAttr('points',[200,200,300,300])
 
   stage.value.add(layer.value);
 });
