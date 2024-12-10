@@ -6,7 +6,8 @@ import { useSelection } from "./useSelection";
 import Konva from "konva";
 import { usePickColor } from "./usePickColor";
 import { useMedia } from "./useMedia";
-import { test } from "./test";
+import { useFill } from "./useFill";
+import { useLasso } from "./useLasso";
 
 export const useTools = (stage: Konva.Stage, layer: Konva.Layer) => {
   const tool = useAppStore().tool;
@@ -19,12 +20,16 @@ export const useTools = (stage: Konva.Stage, layer: Konva.Layer) => {
       return usePencil(stage, layer);
     case "pick_color":
       return usePickColor(stage, layer);
+    case "fill":
+      return useFill(stage, layer);
+    case "lasso":
+      return useLasso(stage, layer);
     case "text":
-      return useText(stage, layer);
+      // return useText(stage, layer);
+      return null;
     case "media":
       return useMedia(stage, layer);  
     default:
-      test(stage);
       return null;
   }
 };

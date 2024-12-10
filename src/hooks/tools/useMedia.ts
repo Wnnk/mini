@@ -32,7 +32,6 @@ export const useMedia = (state: Konva.Stage, layer: Konva.Layer) => {
   }
 
   const editImage = (target: Konva.Image) => {
-    console.log('image')
     if (!appStore.isEdit) return;
     layer.add(transformer);
     transformer.nodes([target]);

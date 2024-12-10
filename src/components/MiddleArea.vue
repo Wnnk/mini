@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, onUnmounted } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { useMousePosition } from "../hooks/useMousePosition";
 import { useAppStore } from "../store/app";
 import { useTools } from "../hooks/tools/index";
 import Konva from "konva";
+
 
 const appStore = useAppStore();
 
@@ -19,18 +20,36 @@ onMounted(() => {
   });
   layer.value = new Konva.Layer();
 
-  // const line = new Konva.Line({
-  //   points: [100, 100, 200, 200],
-  //   stroke: 'black',
-  //   dash: [10,5],
-  //   strokeWidth: 2,
-  // })
+  const line = new Konva.Line({
+    points: [100, 100, 200, 100,200,200,100,200,100,100],
+    stroke: 'black',
+    dash: [10,5],
+    strokeWidth: 2,
+  })
+
+  const rect = new Konva.Rect({
+    x: 300,
+    y: 300,
+    width: 100,
+    height: 100,
+    fill: 'gray',
+  })
 
   // layer.value.add(line);
+  // layer.value.add(rect);
 
 
   stage.value.add(layer.value);
 });
+
+watch(
+  () => appStore.tool,
+  () => {
+    if (!appStore.isEdit) {
+      useTools(stage.value, layer.value);
+    }
+  }
+)
 </script>
 
 <template>
@@ -51,13 +70,6 @@ onMounted(() => {
         <div
           id="canvas_minipaint"
           :style="`width:${appStore.canvas.width} ; height: ${appStore.canvas.height};`"
-          @mousedown="
-            () => {
-              if (!appStore.isEdit) {
-                useTools(stage, layer);
-              }
-            }
-          "
         ></div>
       </div>
     </div>
