@@ -10,6 +10,7 @@ export const useAppStore = defineStore("app", {
     canvas: {
       width: 600,
       height: 480,
+      background: "white",
     }, /* canvas size */
     tool: "", /* current tool */
     isEdit: false, /* is edit mode */

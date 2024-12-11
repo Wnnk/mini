@@ -12,7 +12,6 @@ export const useLasso = (stage: Konva.Stage, layer: Konva.Layer) => {
   const mousedown = () => {
     if (isDrawing.value) return;
     isDrawing.value = true;
-    console.log("mousedown");
     const {x , y} = appStore.info;
     line = new Konva.Line({
       points: [x, y],
@@ -24,7 +23,6 @@ export const useLasso = (stage: Konva.Stage, layer: Konva.Layer) => {
 
   const mousemove = () => {
     if (line === null || !isDrawing.value) return;
-    console.log("mousemove");
     const {x , y} = appStore.info;
     // line.points([line.points()[0], x, y, y]);
     const newPoints = line.points().concat([x, y]);
@@ -34,7 +32,6 @@ export const useLasso = (stage: Konva.Stage, layer: Konva.Layer) => {
 
   const mouseup = () => {
     if (line === null || !isDrawing.value) return;
-    console.log("mouseup");
     isDrawing.value = false;
     const {x , y} = appStore.info;
     const len = line.points().length;
@@ -47,9 +44,14 @@ export const useLasso = (stage: Konva.Stage, layer: Konva.Layer) => {
     line.dash([5, 5]);
     layer.add(line);
     createShape(line);
+
   }
 
 
+  /** 
+   * @description: 创建选区并储存到store中
+   * @param {Konva.Line} line 
+    */
   const createShape = (line: Konva.Line) => {
     if (line === null) return;
     const points = line.points();
@@ -63,17 +65,33 @@ export const useLasso = (stage: Konva.Stage, layer: Konva.Layer) => {
         ctx.closePath();
         ctx.fillStrokeShape(shape);
       },
-      // fill: "red",
+      dash: [5, 5],
       stroke: "black",
       strokeWidth: 1,
     });
     appStore.selectArea = shape;
-    console.log(appStore.selectArea);
+    line.destroy();
+    layer.add(shape);
+    layer.draw();
   }
+
+  /** 
+   * @description: 清除选区
+    */
+  const clearArea = (e:KeyboardEvent) => {
+    if (line === null || e.key !== "Escape") return;
+    line.destroy();
+    line = null;
+    appStore.selectArea = null;
+    layer.draw();
+  }
+
+
 
   stage.on("mousedown", mousedown);
   stage.on("mousemove", mousemove);
   stage.on("mouseup", mouseup);
+  document.addEventListener("keydown", clearArea);
 
   watch(
     () => appStore.tool,
@@ -81,6 +99,7 @@ export const useLasso = (stage: Konva.Stage, layer: Konva.Layer) => {
       stage.off("mousedown", mousedown);
       stage.off("mousemove", mousemove);
       stage.off("mouseup", mouseup);
+      document.removeEventListener("keydown",clearArea);
       line = null;
       isDrawing.value = false;
       appStore.isEdit = false;
