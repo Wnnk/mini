@@ -4,6 +4,8 @@ import { useAppStore } from "../../store/app";
 import { watch } from "vue"
 
 
+
+
 export const useFill = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
   if (appStore.tool !== "fill") return;
@@ -13,6 +15,7 @@ export const useFill = (stage: Konva.Stage, layer: Konva.Layer) => {
     layer.add(shape as Konva.Shape);
   }
  
+  appStore.isEdit = true;
 
   /** 
    * @description: 选区填充颜色
@@ -45,6 +48,7 @@ export const useFill = (stage: Konva.Stage, layer: Konva.Layer) => {
       fill: hex,
       opacity: 0.5,
     })
+    appStore.canvas.background = hex;
     layer.add(background);
     layer.draw();
   }
@@ -57,6 +61,7 @@ export const useFill = (stage: Konva.Stage, layer: Konva.Layer) => {
     () => {
       shape?.off("click", clickArea);
       stage.off("click", clickBackground);
+      appStore.isEdit = false;
     }
   )
 }
