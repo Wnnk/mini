@@ -5,7 +5,6 @@ import { useAppStore } from "../store/app";
 import { useTools } from "../hooks/tools/index";
 import Konva from "konva";
 
-
 const appStore = useAppStore();
 
 const stage = ref<any>(null);
@@ -20,25 +19,6 @@ onMounted(() => {
   });
   layer.value = new Konva.Layer();
 
-  const line = new Konva.Line({
-    points: [100, 100, 200, 100,200,200,100,200,100,100],
-    stroke: 'black',
-    dash: [10,5],
-    strokeWidth: 2,
-  })
-
-  const rect = new Konva.Rect({
-    x: 300,
-    y: 300,
-    width: 100,
-    height: 100,
-    fill: 'gray',
-  })
-
-  // layer.value.add(line);
-  // layer.value.add(rect);
-
-
   stage.value.add(layer.value);
 });
 
@@ -49,7 +29,7 @@ watch(
       useTools(stage.value, layer.value);
     }
   }
-)
+);
 </script>
 
 <template>
