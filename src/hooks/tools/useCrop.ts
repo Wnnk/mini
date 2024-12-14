@@ -11,13 +11,17 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
   let rextWidth = 5;
   let rextHeight = 10;
   const mouseDown = () => {
-    if (isMouseDown) return;
+    // if (isMouseDown) return;
     /* 清除上一个clip框 */
     if (transformer) {
       transformer.destroy();
       transformer = null;
+      if (transformerGroup) {
+        (transformerGroup as Konva.Group).destroy();
+        transformerGroup = null;
+      }
     }
-    isMouseDown = true;
+    // isMouseDown = true;
     const { x, y } = appStore.info;
     transformerGroup = new Konva.Group();
     for (let row = 1; row <= 3; row++) {
@@ -58,7 +62,6 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
     layer.add(transformerGroup);
     layer.add(transformer);
     layer.draw();
-    console.log(transformer, transformerGroup, layer);
   };
 
   const clipArea = () => {
@@ -68,11 +71,11 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
     layer.clip({
       x: x,
       y: y,
-      width: width,
-      height: height,
+      width: Math.floor(width),
+      height: Math.floor(height),
     });
-    appStore.canvas.width = width;
-    appStore.canvas.height = height;
+    appStore.canvas.width = Math.floor(width);
+    appStore.canvas.height = Math.floor(height);
     stage.width(width);
     stage.height(height);
     stage.offset({ x, y });
