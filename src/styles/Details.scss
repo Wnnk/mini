@@ -1,4 +1,4 @@
-@use 'var' as *;
+@use "var" as *;
 
 .details-content {
   height: 206px;
@@ -15,6 +15,21 @@
   width: 70px;
   padding: 3px 5px;
   float: right;
+}
+
+.ui_color_input input[type="color"] {
+  display: block;
+  cursor: pointer;
+  padding: 0;
+  border: 0.2rem solid $input-background-color;
+  width: 3rem;
+}
+
+.block.details input {
+  width: 70px;
+  padding: 3px 5px;
+  float: right;
+  height: 23px;
 }
 
 .details input {
@@ -48,7 +63,7 @@
 
 .block.details button.reset:after {
   position: absolute;
-  content: '';
+  content: "";
   left: 0;
   top: 0;
   bottom: 0;

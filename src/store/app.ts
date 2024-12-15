@@ -1,6 +1,17 @@
 import { defineStore } from "pinia";
 import Konva from "konva";
 
+type ElementInfo = {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  fill: string;
+  rotate: number;
+  opacity: number;
+};
+
 export const useAppStore = defineStore("app", {
   state: () => ({
     hsv: { h: 0, s: 0, v: 0 } /* hsv color */,
@@ -15,6 +26,6 @@ export const useAppStore = defineStore("app", {
     isEdit: false /* is edit mode */,
     file: <File | null>null /* media file */,
     selectArea: <Konva.Shape | null>null,
-    currentElement: <any>null,
+    currentElementInfos: <ElementInfo | null>null,
   }),
 });
