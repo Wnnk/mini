@@ -1,4 +1,4 @@
-@use 'var' as *;
+@use "var" as *;
 
 .sidebar_left {
   -ms-grid-row: 2;
@@ -28,10 +28,9 @@
   cursor: pointer;
 }
 
-
 .sidebar_left .item:after {
   position: absolute;
-  content: '';
+  content: "";
   left: 0;
   top: 0;
   bottom: 0;
@@ -100,8 +99,7 @@
   background-image: url(../assets/desaturate.svg);
 }
 
-
-#popups{
+#popups {
   position: absolute;
   top: 0;
   left: 0;
@@ -113,7 +111,7 @@
 }
 #popups .popup {
   position: fixed;
-  top:15vh;
+  top: 15vh;
   left: calc(100vw / 2);
   transform: translate(-50%, 0);
   background-color: $block-background-color;
@@ -122,7 +120,7 @@
   max-height: calc(80vh);
   margin: 0 auto 0 auto;
   padding: 4rem 0 5rem 0;
-  box-shadow: 0 0 0 4000px rgba(0,0,0,0.3), 0 0 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 4000px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.5);
   z-index: 100;
   font-size: 13px;
   overflow: hidden;
@@ -141,4 +139,25 @@
   border: none;
   background: none;
   z-index: 1;
+}
+
+#popups .dialog_content {
+  overflow-y: auto;
+  max-height: calc(80vh - 11rem);
+  padding: 1rem;
+}
+
+.shape-item {
+  flex: auto;
+  margin: 2px 0;
+  width: 150px;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#popups .popup .preview-item-title {
+  text-align: center;
 }

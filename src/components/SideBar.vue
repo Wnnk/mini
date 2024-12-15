@@ -2,7 +2,6 @@
 import { ref } from "vue";
 import { useAppStore } from "../store/app";
 import "../styles/curour/ColorPicker.scss";
-import { app } from "electron";
 
 const appStore = useAppStore();
 
@@ -31,34 +30,58 @@ const sidebarItems = [
  **/
 const switchTool = (id: string) => {
   appStore.tool = id;
-  if (id === 'media') {
+  if (id === "media") {
     toggleMedia.value = true;
+  } else if (id === "shape") {
+    toggleShape.value = true;
   }
 };
 
 const closePopup = () => {
   toggleMedia.value = false;
-}
+};
 
-
-const fileTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+/**
+ * @description: 打开图片选择弹窗
+ * @param {Event} e 点击事件
+ */
+const fileTypes = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
 const toggleMedia = ref(false);
-const pickFile = (e:Event) => {
+const pickFile = (e: Event) => {
   if (!e.target) return;
   const files = (e.target as HTMLInputElement).files;
   if (!files) return;
   const file = files[0];
   if (!file) return;
-  const fileExtenstion = file.name.split('.').pop();
+  const fileExtenstion = file.name.split(".").pop();
   if (!fileExtenstion || !fileTypes.includes(fileExtenstion.toLowerCase())) {
-    alert('请选择图片文件');
+    alert("请选择图片文件");
     return;
   }
   appStore.file = file;
   toggleMedia.value = false;
-}
+};
 
+/**
+ * @description: 打开形状选择弹窗
+ *
+ */
 
+const toggleShape = ref(false);
+const shapeItems = [
+  { id: "rectangle", title: "矩形", url: "src/assets/rectangle.png" },
+  { id: "circle", title: "圆形", url: "src/assets/circle.png" },
+  { id: "triangle", title: "三角形", url: "src/assets/triangle.png" },
+  {
+    id: "isosceles-triangle",
+    title: "直角三角形",
+    url: "src/assets/isosceles-triangle.png",
+  },
+];
+
+const closeShapePopup = () => {
+  toggleShape.value = false;
+};
 </script>
 
 <template>
@@ -79,8 +102,43 @@ const pickFile = (e:Event) => {
   </div>
   <div id="popups" v-show="toggleMedia">
     <div class="popup wide">
-      <button type="button" class="close" data-id="popup_close" title="Close" @click="closePopup">×</button>
-      <input type="file" @change="pickFile" multiple/>
+      <button
+        type="button"
+        class="close"
+        data-id="popup_close"
+        title="Close"
+        @click="closePopup"
+      >
+        ×
+      </button>
+      <input type="file" @change="pickFile" multiple />
+    </div>
+  </div>
+
+  <div id="popups" v-show="toggleShape">
+    <div class="popup wide">
+      <div class="dialog_content">
+        <div class="flex-container">
+          <div class="shape-item" v-for="item in shapeItems" :key="item.id">
+            <img
+              :src="item.url"
+              width="150px"
+              height="120px"
+              @click="appStore.shapeType = item.id"
+            />
+            <div class="preview-item-title">{{ item.title }}</div>
+          </div>
+          <button
+            type="button"
+            class="close"
+            data-id="popup_close"
+            title="Close"
+            @click="closeShapePopup"
+          >
+            ×
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>

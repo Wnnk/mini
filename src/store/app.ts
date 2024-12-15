@@ -25,6 +25,7 @@ export const useAppStore = defineStore("app", {
     tool: "" /* current tool */,
     isEdit: false /* is edit mode */,
     file: <File | null>null /* media file */,
+    shapeType: <string>"" /* shape type */,
     selectArea: <Konva.Shape | null>null,
     currentElementInfos: <ElementInfo | null>null,
   }),

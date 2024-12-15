@@ -12,6 +12,7 @@ const toggle = computed(() => appStore.rightSideToggle[3]);
       :class="['trn', 'toggle', 'toggle-full', { toggled: !toggle }]"
       data-target="toggle-details"
       data-trn-key="图层"
+      @click="appStore.rightSideToggle[3] = !toggle"
     >
       细节
     </h2>
