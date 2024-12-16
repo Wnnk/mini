@@ -114,7 +114,12 @@ const adjustHue = (event: MouseEvent) => {
 
 <template>
   <div class="colors block">
-    <h2 :class="['trn', 'toggle', { toggled: !toggle }]">颜色</h2>
+    <h2
+      :class="['trn', 'toggle', { toggled: !toggle }]"
+      @click="appStore.rightSideToggle[1] = !toggle"
+    >
+      颜色
+    </h2>
     <div class="content" id="toggle_colors" v-show="toggle">
       <div class="ui_flex_group justify_content_space_between stacked">
         <div

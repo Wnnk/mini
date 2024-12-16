@@ -1,6 +1,7 @@
 import Konva from "konva";
 import { useAppStore } from "../../store/app";
 import { watch } from "vue";
+import { Node, NodeConfig } from "konva/lib/Node";
 
 export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
@@ -22,9 +23,30 @@ export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
         transformer.nodes([item]);
         isMouseDown = true;
         layer.draw();
+        getElementInfos(item);
       }
     });
   }
+
+  const getElementInfos = (node: any) => {
+    let { x, y, width, height } = node.getClientRect();
+    if (x === 0 && y === 0) {
+      x = node.x();
+      y = node.y();
+      width = node.width();
+      height = node.height();
+    }
+    appStore.currentElementInfos = {
+      id: node._id,
+      x,
+      y,
+      width,
+      height,
+      rotate: node.rotation(),
+      opacity: node.opacity(),
+      fill: node.stroke(),
+    };
+  };
 
   const mousedMove = () => {
     if (selected === null || isMouseDown === false) return;
