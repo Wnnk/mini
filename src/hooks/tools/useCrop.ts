@@ -23,16 +23,8 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
       height: 100,
       fill: "transparent",
       stroke: "black",
-      strokeWidth: 1,
-      boundBoxFunc: (oldBox, newBox) => {
-        return {
-          x: newBox.x,
-          y: newBox.y,
-          width: newBox.width,
-          height: newBox.height,
-          rotation:oldBox.rotation,
-        }
-      },
+      strokeWidth: 5,
+      strokeScaleEnabled: false,
     });
     const group = new Konva.Group();
     group.add(rect);
@@ -44,20 +36,7 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
       borderStroke: `black`,
       borderStrokeWidth: 1,
       anchorCornerRadius: 5,
-      
-      keepRatio: false,
-      boundBoxFunc: (oldBox, newBox) => {
-        const newWidth = newBox.width;
-        const newHeight = newBox.height;
-       
-        return {
-          x: newBox.x,
-          y: newBox.y,
-          width: newWidth,
-          height: newHeight,
-          rotation:oldBox.rotation,
-        }
-      }
+      ignoreStroke: true,
    
     })
     transformer.nodes([group]);
