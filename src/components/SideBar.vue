@@ -82,6 +82,10 @@ const shapeItems = [
 const closeShapePopup = () => {
   toggleShape.value = false;
 };
+const pickShape = (shapeType: string) => {
+  appStore.shapeType = shapeType;
+  toggleShape.value = false;
+}
 </script>
 
 <template>
@@ -119,7 +123,7 @@ const closeShapePopup = () => {
     <div class="popup wide">
       <div class="dialog_content">
         <div class="flex-container">
-          <div class="shape-item" v-for="item in shapeItems" :key="item.id">
+          <div class="shape-item" v-for="item in shapeItems" :key="item.id" @click="pickShape(item.id)">
             <img
               :src="item.url"
               width="150px"

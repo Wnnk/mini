@@ -9,6 +9,7 @@ import { useMedia } from "./useMedia";
 import { useFill } from "./useFill";
 import { useLasso } from "./useLasso";
 import { useCrop } from "./useCrop";
+import { useShape } from "./useShape";
 
 export const useTools = (stage: Konva.Stage, layer: Konva.Layer) => {
   const tool = useAppStore().tool;
@@ -23,6 +24,8 @@ export const useTools = (stage: Konva.Stage, layer: Konva.Layer) => {
       return usePickColor(stage, layer);
     case "fill":
       return useFill(stage, layer);
+    case "shape":
+      return useShape(stage, layer);
     case "lasso":
       return useLasso(stage, layer);
     case "text":
