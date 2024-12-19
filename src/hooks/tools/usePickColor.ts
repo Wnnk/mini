@@ -8,7 +8,10 @@ export const usePickColor = (stage: Konva.Stage, layer: Konva.Layer) => {
   if (appStore.tool !== "pick_color") return;
 
   const getColor = () => {
-    const { x, y } = appStore.info;
+    const pos = stage.getPointerPosition();
+    if (!pos) return;
+    const x= pos.x; 
+    const y = pos.y
     const pixel = layer.getContext().getImageData(x, y, 1, 1).data;
     if (pixel) {
       // const color = `rgb(${pixel[0]}, ${pixel[1]}, ${pixel[2]})`;

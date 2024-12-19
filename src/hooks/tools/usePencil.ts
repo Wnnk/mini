@@ -15,7 +15,10 @@ export const usePencil = (stage:Konva.Stage,layer:Konva.Layer) => {
   const startDraw = () => {
     if (isDrawing.value) return;
     isDrawing.value = true;
-    const { x, y } = appStore.info;
+    const pos = stage.getPointerPosition();
+    if (!pos) return;
+    const x= pos.x; 
+    const y = pos.y
     line = new Konva.Line({
       stroke: hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v),
       strokeWidth: 2,
@@ -27,7 +30,10 @@ export const usePencil = (stage:Konva.Stage,layer:Konva.Layer) => {
 
   const draw = () => {
     if (!isDrawing.value || line === null) return;
-    const { x, y } = appStore.info;
+    const pos = stage.getPointerPosition();
+    if (!pos) return;
+    const x= pos.x; 
+    const y = pos.y
     const newPoints = line.points().concat([x, y]);
     line.points(newPoints);
     layer.batchDraw();

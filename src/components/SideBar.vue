@@ -12,7 +12,7 @@ const sidebarItems = [
   { id: "pencil", title: "铅笔" },
   { id: "pick_color", title: "取色器" },
   { id: "erase", title: "橡皮擦" },
-  { id: "magic_erase", title: "魔法橡皮擦" },
+  // { id: "magic_erase", title: "魔法橡皮擦" },
   { id: "fill", title: "填充" },
   { id: "shape", title: "形状" },
   { id: "lasso", title: "套索工具" },
@@ -20,8 +20,8 @@ const sidebarItems = [
   { id: "media", title: "图片" },
   { id: "crop", title: "裁剪" },
   { id: "blur", title: "模糊" },
-  { id: "sharpen", title: "锐化" },
-  { id: "desaturate", title: "饱和度" },
+  // { id: "sharpen", title: "锐化" },
+  // { id: "desaturate", title: "饱和度" },
 ];
 
 /**

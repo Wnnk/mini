@@ -1,17 +1,17 @@
 import { useAppStore } from "../../store/app";
-import { watch } from "vue";
+import { h, watch } from "vue";
 import Konva from "konva";
 
 export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
   if (appStore.tool !== "crop") return;
-  let isMouseDown = false;
+  let isTransforming = false;
   let transformer = <Konva.Transformer | null>null;
   let transformerGroup = <Konva.Group | null>null;
   let rextWidth = 5;
   let rextHeight = 10;
   const mouseDown = () => {
-    // if (isMouseDown) return;
+    if(isTransforming) return;
     /* 清除上一个clip框 */
     if (transformer) {
       transformer.destroy();
@@ -21,8 +21,12 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
         transformerGroup = null;
       }
     }
-    // isMouseDown = true;
-    const { x, y } = appStore.info;
+    const pos = stage.getPointerPosition();
+    if (!pos) {
+      return;
+    }
+    const x= pos.x; 
+    const y = pos.y
     transformerGroup = new Konva.Group();
     for (let row = 1; row <= 3; row++) {
       for (let col = 1; col <= 3; col++) {
@@ -52,12 +56,17 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
       ignoreStroke: true,
     });
     transformer.nodes([transformerGroup]);
-    transformer.on("transformend", () => {
+    transformer.on("transformstart", () => {
+      isTransforming = true;
+    })
+    transformer.on("transformend", (e) => {
+      e.cancelBubble = true;
       clipArea();
       transformer!.destroy();
       transformerGroup!.destroy();
       transformer = null;
       transformerGroup = null;
+      isTransforming = false;
     });
     layer.add(transformerGroup);
     layer.add(transformer);
@@ -66,20 +75,29 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
 
   const clipArea = () => {
     if (!transformerGroup) return;
-    const { x, y, width, height } = transformerGroup.getClientRect();
-
-    layer.clip({
-      x: x,
-      y: y,
-      width: Math.floor(width),
-      height: Math.floor(height),
-    });
-    appStore.canvas.width = Math.floor(width);
-    appStore.canvas.height = Math.floor(height);
+    let { x, y, width, height } = transformerGroup.getClientRect();
+    x= Math.floor(x);
+    y = Math.floor(y);
+    width = Math.floor(width);
+    height = Math.floor(height);
+    appStore.canvas.width =width;
+    appStore.canvas.height = height;
     stage.width(width);
     stage.height(height);
-    stage.offset({ x, y });
-    isMouseDown = false;
+    console.log(stage.width(), stage.height())
+    const border = new Konva.Rect({
+      x: 0,
+      y: 0,
+      width: stage.width(),
+      height: stage.height(),
+      fill: "red",
+      strokeWidth:5,
+      stroke: "black",
+    });
+    layer.add(border);
+    layer.draw();
+   
+
   };
 
   stage.on("mousedown", mouseDown);

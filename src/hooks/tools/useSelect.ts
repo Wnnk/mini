@@ -11,7 +11,8 @@ export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
   let isMouseDown = false;
 
   for (const item of layer.children) {
-    item.on("click", () => {
+    item.on("click", (event) => {
+      event.cancelBubble = true;
       if (item._id !== selected) {
         if (transformer) {
           transformer.nodes([]);
@@ -67,8 +68,18 @@ export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
     }
   };
 
+  const stageClick  = () => {
+    console.log("stage click");
+    transformer?.nodes([]);
+    transformer = null;
+    selected = null;
+    layer.draw();
+  }
+  
+
   document.addEventListener("mousemove", mousedMove);
   document.addEventListener("mouseup", mouseUp);
+  stage.on("click", stageClick);
 
   watch(
     () => appStore.tool,
@@ -80,6 +91,7 @@ export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
       }
       document.removeEventListener("mousemove", mousedMove);
       document.removeEventListener("mouseup", mouseUp);
+      stage.off("click", stageClick);
       clearListen();
     }
   );

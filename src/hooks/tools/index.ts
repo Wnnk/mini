@@ -10,6 +10,7 @@ import { useFill } from "./useFill";
 import { useLasso } from "./useLasso";
 import { useCrop } from "./useCrop";
 import { useShape } from "./useShape";
+import { useBlur } from "./useBlur";
 
 export const useTools = (stage: Konva.Stage, layer: Konva.Layer) => {
   const tool = useAppStore().tool;
@@ -29,12 +30,13 @@ export const useTools = (stage: Konva.Stage, layer: Konva.Layer) => {
     case "lasso":
       return useLasso(stage, layer);
     case "text":
-      // return useText(stage, layer);
-      return null;
+      return useText(stage, layer);
     case "media":
       return useMedia(stage, layer);
     case "crop":
       return useCrop(stage, layer);  
+    case "blur":
+      return useBlur(stage, layer);
     default:
       return null;
   }

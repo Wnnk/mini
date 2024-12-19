@@ -9,7 +9,10 @@ import { hsvToHex } from "../../utils/color";
  */
 export function useText(stage: Konva.Stage, layer: Konva.Layer) {
   const appStore = useAppStore();
-  const { x, y } = appStore.info;
+  const pos = stage.getPointerPosition();
+  if (!pos) return;
+  const x= pos.x; 
+  const y = pos.y
 
   // stage.add(layer)
   /**

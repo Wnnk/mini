@@ -18,8 +18,8 @@ export const useAppStore = defineStore("app", {
     info: { x: 0, y: 0 } /* mouse position */,
     rightSideToggle: [false, true, true, true, false] /* 右侧面板开关 */,
     canvas: {
-      width: 1000,
-      height: 800,
+      width: 600,
+      height: 600,
       background: "white",
     } /* canvas size */,
     tool: "" /* current tool */,

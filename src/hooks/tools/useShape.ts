@@ -68,7 +68,13 @@ export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
     if (appStore.shapeType === '')return;
   
 
-    const {x ,y} = appStore.info;
+
+    const pos = stage.getPointerPosition();
+
+    if (!pos) return;
+    const x = pos.x;
+    const y = pos.y;
+
     const type = appStore.shapeType;
     switch (type) {
       case'rectangle':
