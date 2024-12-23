@@ -15,10 +15,11 @@ export const usePencil = (stage:Konva.Stage,layer:Konva.Layer) => {
   const startDraw = () => {
     if (isDrawing.value) return;
     isDrawing.value = true;
-    const pos = stage.getPointerPosition();
-    if (!pos) return;
-    const x= pos.x; 
-    const y = pos.y
+    // const pos = stage.getPointerPosition();
+    // if (!pos) return;
+    // const x= pos.x; 
+    // const y = pos.y
+    const {x, y} = appStore.info
     line = new Konva.Line({
       stroke: hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v),
       strokeWidth: 2,

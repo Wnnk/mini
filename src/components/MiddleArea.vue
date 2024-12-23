@@ -5,6 +5,7 @@ import { useAppStore } from "../store/app";
 import { useTools } from "../hooks/tools/index";
 import Konva from "konva";
 
+
 const appStore = useAppStore();
 
 const stage = ref<any>(null);
@@ -19,29 +20,10 @@ onMounted(() => {
   });
 
   layer.value = new Konva.Layer();
-  console.log(layer.value)
- 
-  // const rect = new Konva.Rect({
-  //   x: 0,
-  //   y: 0,
-  //   width: appStore.canvas.width,
-  //   height: appStore.canvas.height,
-  //   fill: "red",
-  // });
-  // const group = new Konva.Group({
-  //   clipFunc: (ctx) => {
-  //     /* 补充，一个圆形半径为10，从0，0 移动的100，0所经过的区域 */
 
 
-  //   }
-  // });
-  // group.add(rect);
-  // layer.value.add(group);
+  layer.value.draw();
   stage.value.add(layer.value);
-  
-
-
-
 });
 
 watch(

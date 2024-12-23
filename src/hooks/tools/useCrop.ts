@@ -76,31 +76,27 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
   const clipArea = () => {
     if (!transformerGroup) return;
     let { x, y, width, height } = transformerGroup.getClientRect();
-    x= Math.floor(x);
-    y = Math.floor(y);
+    x= Math.max(0, Math.floor(x));
+    y = Math.max(0, Math.floor(y));
     width = Math.floor(width);
     height = Math.floor(height);
     appStore.canvas.width =width;
     appStore.canvas.height = height;
+
     stage.width(width);
     stage.height(height);
-    console.log(stage.width(), stage.height())
-    const border = new Konva.Rect({
-      x: 0,
-      y: 0,
-      width: stage.width(),
-      height: stage.height(),
-      fill: "red",
-      strokeWidth:5,
-      stroke: "black",
+    layer.children.forEach((child) => {
+      child.x(child.x() - x);
+      child.y(child.y() - y);
     });
-    layer.add(border);
-    layer.draw();
-   
 
+    layer.draw();
+
+  
   };
 
   stage.on("mousedown", mouseDown);
+
 
   watch(
     () => appStore.tool,
