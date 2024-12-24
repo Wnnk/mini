@@ -2,25 +2,30 @@ import { watch } from "vue";
 import { useAppStore } from "../../store/app";
 import Konva from "konva";
 import { hsvToHex } from "../../utils/color";
+import { KonvaEventObject } from "konva/lib/Node";
 
-/**
- * 创建编辑区域
- * @param node
- */
+
 export function useText(stage: Konva.Stage, layer: Konva.Layer) {
   const appStore = useAppStore();
-  const pos = stage.getPointerPosition();
-  if (!pos) return;
-  const x= pos.x; 
-  const y = pos.y
-
-  // stage.add(layer)
-  /**
-   * @description 编辑文本区域
-   */
+  if (appStore.tool !== "text") return;
+  let currentText = "";
+  let text: Konva.Text | null = null;
+  let input: HTMLInputElement;
   let tr: Konva.Transformer;
-  const editArea = () => {
-    const text = new Konva.Text({
+
+  /**
+   * @description 创建编辑区域
+   */
+  const createeditArea = () => {
+    const pos = stage.getPointerPosition();
+    if (!pos) return;
+    const x= pos.x; 
+    const y = pos.y
+    /* 清除上一次的编辑 */
+    if (tr && input) {
+      enterEvent();
+    }
+    text = new Konva.Text({
       x: x,
       y: y,
       text: "   ",
@@ -39,52 +44,87 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
     tr.nodes([text]);
     layer.draw();
 
-    return text;
+    
+ 
+    /* 使用input记录输入文本,实现支持中文输入 */
+    input = document.createElement("input");
+    input.type = "text";
+    input.style.position = "absolute";
+    input.style.left = `${x}px`;
+    input.style.top = `${y}px`;
+    input.style.fontSize = "24px";
+    input.style.opacity = "0"; // 隐藏输入框
+    input.id = `${text._id}`
+    document.body.appendChild(input);
+    requestAnimationFrame(() => {
+      input.focus();
+    });
+    input.addEventListener("input", updateText);
+    text.on("click", selectText);
+
+    appStore.isEdit = true;
   };
-  const text = editArea();
-  appStore.isEdit = true;
-  stage.add(layer);
 
-  let currentText = "";
-  /* 使用input记录输入文本,实现支持中文输入 */
-  const input = document.createElement("input");
-  input.type = "text";
-  input.style.position = "absolute";
-  input.style.left = `${x}px`;
-  input.style.top = `${y}px`;
-  input.style.fontSize = "24px";
-  input.style.opacity = "0"; // 隐藏输入框
-  document.body.appendChild(input);
 
-  requestAnimationFrame(() => {
-    input.focus();
-  });
+  /** 
+   * @description 选定文本编辑
+  **/
+  const selectText = (e:KonvaEventObject<MouseEvent, Konva.Text>) => {
+    /* 清除上一次的编辑 */
+    if (tr && input) {
+      enterEvent();
+    }
+    e.cancelBubble = true;
+    input = document.getElementById(`${e.target._id}`) as HTMLInputElement;
+    text = layer.children.find((child) => child._id === e.target._id) as Konva.Text;
+    console.log(text)
+    currentText = text.attrs.text;
+    input.value = currentText;
+    tr = new Konva.Transformer({
+      anchorSize: 10,
+      borderStroke: "black",
+      borderDash: [3, 3],
+    })
+    layer.add(tr);
+    tr.nodes([text]);
+    layer.draw();
+    requestAnimationFrame(() => {
+      input.focus();
+    });
 
+
+  }
+
+
+
+  /* @description 更新文本 */
   const updateText = (e: Event) => {
+    if (!text) return;
     currentText = (e.target as HTMLInputElement).value;
     text.text(currentText);
     layer.draw();
   };
 
-  input.addEventListener("input", updateText);
-
+  
+  /* @description 编辑结束 */
   const enterEvent = () => {
-    console.log("enter");
+    // if (!input) return;
     appStore.isEdit = false;
-    input.remove();
+    // input.remove();
     tr.destroy();
     layer.draw();
   };
+
   /**
    * @description 监听键盘事件
    */
-
   const keyDownListenter = (e: KeyboardEvent) => {
+    if (!text) return;
     if (e.key === "Enter") {
       enterEvent();
     }
     if (e.key === "Escape") {
-      input.value = ""; // 按下ESC清空输入
+      currentText = ""; // 按下ESC清空输入
       text.text("   "); // 重置文本
       layer.draw();
     }
@@ -96,14 +136,21 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
       }
     }
   };
+
+
   document.addEventListener("keydown", keyDownListenter);
+  stage.on("click", createeditArea)
+
 
   watch(
     () => appStore.tool,
     () => {
       enterEvent();
       document.removeEventListener("keydown", keyDownListenter);
-      input.removeEventListener("input", updateText);
+      if (input) {
+        input.removeEventListener("input", updateText);
+      }
+      stage.off("click", createeditArea);
     }
   );
 }
