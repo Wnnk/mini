@@ -1,4 +1,4 @@
-@use 'var' as *;
+@use "var" as *;
 
 .sidebar_right {
   -ms-grid-row: 2;
@@ -12,6 +12,24 @@
   overflow-y: scroll;
   margin: 0 5px;
   width: 200px;
+
+  /* 整个滚动条的宽度 */
+  &::-webkit-scrollbar {
+    width: 12px; /* 垂直滚动条的宽度 */
+    height: 12px; /* 水平滚动条的高度 */
+  }
+
+  /* 滚动条轨道 */
+  &::-webkit-scrollbar-track {
+    background: #666d6f; /* 轨道的背景色 */
+    border-radius: 10px; /* 轨道的圆角 */
+  }
+
+  /* 滚动条滑块 */
+  &::-webkit-scrollbar-thumb {
+    background: #2d2b2b; /* 滑块的背景色 */
+    border-radius: 0px; /* 滑块的圆角 */
+  }
 }
 
 .sidebar_right .block {
@@ -49,7 +67,7 @@
 
 .block h2.toggle:before {
   position: absolute;
-  content: '';
+  content: "";
   width: 0;
   height: 0;
   right: 10px;
@@ -64,10 +82,9 @@
   border-color: $text-color-muted transparent transparent transparent;
 }
 
-
 .canvas_preview_wrapper {
   position: relative;
-  height: 100px;
+  height: 176px;
   margin: 5px 5px 10px 5px;
 }
 
@@ -94,8 +111,6 @@ canvas {
   position: relative;
   z-index: 2;
 }
-
-
 
 .canvas_preview_details button {
   margin: 0;

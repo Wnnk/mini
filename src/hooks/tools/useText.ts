@@ -4,7 +4,6 @@ import Konva from "konva";
 import { hsvToHex } from "../../utils/color";
 import { KonvaEventObject } from "konva/lib/Node";
 
-
 export function useText(stage: Konva.Stage, layer: Konva.Layer) {
   const appStore = useAppStore();
   if (appStore.tool !== "text") return;
@@ -19,8 +18,8 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
   const createeditArea = () => {
     const pos = stage.getPointerPosition();
     if (!pos) return;
-    const x= pos.x; 
-    const y = pos.y
+    const x = pos.x;
+    const y = pos.y;
     /* 清除上一次的编辑 */
     if (tr && input) {
       enterEvent();
@@ -33,6 +32,7 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
       fontFamily: "Arial",
       draggable: false,
       fill: `${hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v)}`,
+      name: `Text_${Math.floor(Math.random() * 10000)}`,
     });
     layer.add(text);
     tr = new Konva.Transformer({
@@ -44,8 +44,6 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
     tr.nodes([text]);
     layer.draw();
 
-    
- 
     /* 使用input记录输入文本,实现支持中文输入 */
     input = document.createElement("input");
     input.type = "text";
@@ -54,7 +52,7 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
     input.style.top = `${y}px`;
     input.style.fontSize = "24px";
     input.style.opacity = "0"; // 隐藏输入框
-    input.id = `${text._id}`
+    input.id = `${text._id}`;
     document.body.appendChild(input);
     requestAnimationFrame(() => {
       input.focus();
@@ -65,37 +63,34 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
     appStore.isEdit = true;
   };
 
-
-  /** 
+  /**
    * @description 选定文本编辑
-  **/
-  const selectText = (e:KonvaEventObject<MouseEvent, Konva.Text>) => {
+   **/
+  const selectText = (e: KonvaEventObject<MouseEvent, Konva.Text>) => {
     /* 清除上一次的编辑 */
     if (tr && input) {
       enterEvent();
     }
     e.cancelBubble = true;
     input = document.getElementById(`${e.target._id}`) as HTMLInputElement;
-    text = layer.children.find((child) => child._id === e.target._id) as Konva.Text;
-    console.log(text)
+    text = layer.children.find(
+      (child) => child._id === e.target._id
+    ) as Konva.Text;
+    console.log(text);
     currentText = text.attrs.text;
     input.value = currentText;
     tr = new Konva.Transformer({
       anchorSize: 10,
       borderStroke: "black",
       borderDash: [3, 3],
-    })
+    });
     layer.add(tr);
     tr.nodes([text]);
     layer.draw();
     requestAnimationFrame(() => {
       input.focus();
     });
-
-
-  }
-
-
+  };
 
   /* @description 更新文本 */
   const updateText = (e: Event) => {
@@ -105,7 +100,6 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
     layer.draw();
   };
 
-  
   /* @description 编辑结束 */
   const enterEvent = () => {
     // if (!input) return;
@@ -137,10 +131,8 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
     }
   };
 
-
   document.addEventListener("keydown", keyDownListenter);
-  stage.on("click", createeditArea)
-
+  stage.on("click", createeditArea);
 
   watch(
     () => appStore.tool,

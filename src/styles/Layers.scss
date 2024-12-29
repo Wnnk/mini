@@ -1,4 +1,4 @@
-@use 'var' as *;
+@use "var" as *;
 
 .sidebar_right .block.layers .content {
   padding-bottom: 25px;
@@ -36,9 +36,6 @@
   margin-bottom: 2px;
 }
 
-.layers_list .visible {
-  opacity: 0.4;
-}
 .layers_list .visibility {
   position: relative;
   float: left;
@@ -53,9 +50,13 @@
   box-shadow: none;
 }
 
+.layers_list .visible {
+  opacity: 0.4;
+}
+
 .layers_list .visibility:after {
   position: absolute;
-  content: '';
+  content: "";
   left: 0;
   top: 0;
   bottom: 0;

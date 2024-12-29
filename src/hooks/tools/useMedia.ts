@@ -7,7 +7,7 @@ export const useMedia = (state: Konva.Stage, layer: Konva.Layer) => {
   let transformer = new Konva.Transformer();
   const createImage = () => {
     if (appStore.isEdit || !appStore.file) return;
-    const {x ,y} = appStore.info;
+    const { x, y } = appStore.info;
     const img = new Image();
     img.src = URL.createObjectURL(appStore.file);
     img.onload = () => {
@@ -18,26 +18,25 @@ export const useMedia = (state: Konva.Stage, layer: Konva.Layer) => {
         width: 200,
         height: 200,
         draggable: true,
-      })
+        name: `image_${Math.floor(Math.random() * 10000)}`,
+      });
       layer.add(image);
       layer.batchDraw();
       appStore.isEdit = true;
 
-      image.on('click', (e)=> {
+      image.on("click", (e) => {
         e.cancelBubble = true;
         editImage(image);
-      } );
-    }
-
-  }
+      });
+    };
+  };
 
   const editImage = (target: Konva.Image) => {
     if (!appStore.isEdit) return;
     layer.add(transformer);
     transformer.nodes([target]);
     layer.draw();
-  }
-  
+  };
 
   state.on("click", () => {
     if (appStore.isEdit) {
@@ -49,4 +48,4 @@ export const useMedia = (state: Konva.Stage, layer: Konva.Layer) => {
     }
   });
   // document.addEventListener("mousedown", createImage)
-}
+};

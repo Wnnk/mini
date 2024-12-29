@@ -3,8 +3,8 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { useMousePosition } from "../hooks/useMousePosition";
 import { useAppStore } from "../store/app";
 import { useTools } from "../hooks/tools/index";
+import KonvaTransformer from "../hooks/transformer";
 import Konva from "konva";
-
 
 const appStore = useAppStore();
 
@@ -20,10 +20,20 @@ onMounted(() => {
   });
 
   layer.value = new Konva.Layer();
-
+  const rect = new Konva.Rect({
+    x: 0,
+    y: 0,
+    width: 300,
+    height: 200,
+    fill: "red",
+    name: `test`,
+  });
+  layer.value.add(rect);
 
   layer.value.draw();
   stage.value.add(layer.value);
+  appStore.canvas.stage = stage.value;
+  appStore.canvas.layer = layer.value;
 });
 
 watch(
@@ -32,6 +42,33 @@ watch(
     if (!appStore.isEdit) {
       useTools(stage.value, layer.value);
     }
+  }
+);
+
+const updatePreview = () => {
+  const layer = appStore.canvas.layer;
+  const previewLayer = appStore.canvas.previewLayer;
+  const previewStage = appStore.canvas.previewStage;
+  if (!layer || !previewLayer || !previewStage) return;
+  /* 更新预览层 */
+  previewLayer.destroy();
+  appStore.canvas.previewLayer = layer.clone({ listening: false });
+  const scaleX = 176 / appStore.canvas.width;
+  const scaleY = 176 / appStore.canvas.height;
+  const scale = Math.min(scaleX, scaleY);
+  appStore.canvas.previewLayer.scale({ x: scale, y: scale });
+  appStore.canvas.previewStage!.add(
+    appStore.canvas.previewLayer as Konva.Layer
+  );
+};
+
+watch(
+  () => appStore.canvas.layer,
+  () => {
+    updatePreview();
+  },
+  {
+    deep: true,
   }
 );
 </script>
@@ -46,7 +83,6 @@ watch(
         id="canvas_wrapper"
         :style="`width:${appStore.canvas.width} ; height: ${appStore.canvas.height};`"
       >
-        <!-- <div id="mouse" class="circle"></div> -->
         <div
           class="transparent-grid white"
           id="canvas_minipaint_background"
