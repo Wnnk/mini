@@ -6,7 +6,7 @@ import { watch } from "vue";
 export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
   let shape: any = null;
-  let transformer: Konva.Transformer | null = null;
+  // let transformer: Konva.Transformer | null = null;
   const createRectangle = (
     x: number,
     y: number,
@@ -69,16 +69,16 @@ export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
   };
 
   const transformShape = (shape: any) => {
-    transformer = new Konva.Transformer();
-    transformer.nodes([shape]);
-    layer.add(transformer);
+    appStore.activeTransform = new Konva.Transformer();
+    appStore.activeTransform.nodes([shape]);
+    layer.add(appStore.activeTransform as Konva.Transformer);
   };
 
   const mouseDown = () => {
     /* 清除上一个shape的transformer */
-    if (transformer) {
-      transformer.destroy();
-      transformer = null;
+    if (appStore.activeTransform) {
+      appStore.activeTransform.destroy();
+      appStore.activeTransform = null;
       return;
     }
     /* 没有选定shape */
@@ -119,9 +119,9 @@ export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
     () => {
       stage.off("click", mouseDown);
       shape?.off("click", transformShape(shape));
-      transformer?.destroy();
+      appStore.activeTransform?.destroy();
       shape = null;
-      transformer = null;
+      appStore.activeTransform = null;
     }
   );
 };

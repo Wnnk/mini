@@ -15,11 +15,11 @@ export const useSelection = (stage: Konva.Stage, layer: Konva.Layer) => {
     closed: true,
     visible: true,
   });
-  let transformer = <Konva.Transformer | null>null;
+  // let transformer = <Konva.Transformer | null>null;
   layer.add(selectionBox);
   const mouseDown = () => {
     if (isSelect) return;
-    if (transformer) return;
+    if (appStore.activeTransform) return;
     isSelect = true;
     const pos = stage.getPointerPosition()!;
     selectionBox.visible(true);
@@ -76,31 +76,35 @@ export const useSelection = (stage: Konva.Stage, layer: Konva.Layer) => {
     for (const child of selectedList) {
       group.add(child);
     }
-    transformer = new Konva.Transformer({
+    if (appStore.activeTransform) {
+      appStore.activeTransform.destroy();
+    }
+
+    appStore.activeTransform = new Konva.Transformer({
       anchorSize: 10,
       borderStroke: "black",
       // borderDash: [3, 3],
     });
 
-    transformer.nodes([group]);
-    layer.add(transformer);
+    appStore.activeTransform.nodes([group]);
+    layer.add(appStore.activeTransform as Konva.Transformer);
     layer.add(group);
     // appStore.tool = "";
   };
 
-  document.addEventListener("mousedown", mouseDown);
-  document.addEventListener("mousemove", mouseMove);
-  document.addEventListener("mouseup", mouseUp);
-  document.addEventListener("mouseleave", mouseUp);
+  stage.on("mousedown", mouseDown);
+  stage.on("mousemove", mouseMove);
+  stage.on("mouseup", mouseUp);
+  stage.on("mouseleave", mouseUp);
 
   watch(
     () => appStore.tool,
     () => {
-      document.removeEventListener("mousedown", mouseDown);
-      document.removeEventListener("mousemove", mouseMove);
-      document.removeEventListener("mouseup", mouseUp);
-      document.removeEventListener("mouseleave", mouseUp);
-      transformer?.destroy();
+      stage.off("mousedown", mouseDown);
+      stage.off("mousemove", mouseMove);
+      stage.off("mouseup", mouseUp);
+      stage.off("mouseleave", mouseUp);
+      appStore.activeTransform?.destroy();
       appStore.isEdit = false;
     }
   );

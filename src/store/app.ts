@@ -20,7 +20,8 @@ export const useAppStore = defineStore("app", {
     canvas: {
       width: 600,
       height: 600,
-      background: "white",
+      background: <Konva.Rect | null>null,
+      backgroundColor: "white",
       stage: <Konva.Stage | null>null,
       layer: <Konva.Layer | null>null,
       previewStage: <Konva.Stage | null>null,

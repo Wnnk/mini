@@ -2,56 +2,65 @@ import Konva from "konva";
 import { useAppStore } from "../../store/app";
 import { watch, ref } from "vue";
 
-
 export const useLasso = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
   if (appStore.tool !== "lasso") return;
   appStore.isEdit = true;
-  let line: Konva.Line | null = null; 
+  let line: Konva.Line | null = null;
   let isDrawing = ref(false);
   const mousedown = () => {
     if (isDrawing.value) return;
     isDrawing.value = true;
-    const {x , y} = appStore.info;
+
+    if (appStore.selectArea) {
+      appStore.selectArea.destroy();
+      appStore.selectArea = null;
+    }
+
+    const { x, y } = appStore.info;
     line = new Konva.Line({
       points: [x, y],
       stroke: "black",
       strokeWidth: 1,
-    })
+      name: `lasso_${Math.floor(Math.random() * 10000)}`,
+      tension: 0.3,
+    });
     layer.add(line);
-  }
+  };
 
   const mousemove = () => {
     if (line === null || !isDrawing.value) return;
-    const {x , y} = appStore.info;
+    const { x, y } = appStore.info;
     // line.points([line.points()[0], x, y, y]);
     const newPoints = line.points().concat([x, y]);
     line.points(newPoints);
     layer.batchDraw();
-  }
+  };
 
   const mouseup = () => {
     if (line === null || !isDrawing.value) return;
     isDrawing.value = false;
-    const {x , y} = appStore.info;
+
     const len = line.points().length;
     const points = line.points();
-     /* 非闭合选区 转换成闭合选区 */
-    if (points[0] !== points[len - 2] || points[1] !== points[len - 1]) {
-      points.push(points[0], points[1]);
-      line.points(points);
-    }
+    /* 非闭合选区 转换成闭合选区 */
+    // if (points[0] !== points[len - 2] || points[1] !== points[len - 1]) {
+    //   points.push(points[0], points[1]);
+    //   line.points(points);
+    // }
     line.dash([5, 5]);
+    line.closed(true);
     layer.add(line);
-    createShape(line);
+    console.log(line.getClientRect());
+    // createShape(line);
+    appStore.selectArea = line;
+    layer.draw();
+  };
 
-  }
-
-
-  /** 
+  /**
    * @description: 创建选区并储存到store中
-   * @param {Konva.Line} line 
-    */
+   * @param {Konva.Line} line
+   */
   const createShape = (line: Konva.Line) => {
     if (line === null) return;
     const points = line.points();
@@ -73,25 +82,23 @@ export const useLasso = (stage: Konva.Stage, layer: Konva.Layer) => {
     line.destroy();
     layer.add(shape);
     layer.draw();
-  }
+  };
 
-  /** 
+  /**
    * @description: 清除选区
-    */
-  const clearArea = (e:KeyboardEvent) => {
+   */
+  const clearArea = (e: KeyboardEvent) => {
     if (line === null || e.key !== "Escape") return;
     line.destroy();
     line = null;
     appStore.selectArea = null;
     layer.draw();
-  }
-
-
+  };
 
   stage.on("mousedown", mousedown);
   stage.on("mousemove", mousemove);
   stage.on("mouseup", mouseup);
-  document.addEventListener("keydown", clearArea);
+  stage.on("keydown", () => clearArea);
 
   watch(
     () => appStore.tool,
@@ -99,11 +106,9 @@ export const useLasso = (stage: Konva.Stage, layer: Konva.Layer) => {
       stage.off("mousedown", mousedown);
       stage.off("mousemove", mousemove);
       stage.off("mouseup", mouseup);
-      document.removeEventListener("keydown",clearArea);
-      line = null;
+      stage.off("keydown", clearArea);
       isDrawing.value = false;
       appStore.isEdit = false;
     }
-  )
-
-}
+  );
+};

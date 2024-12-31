@@ -3,13 +3,26 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { useMousePosition } from "../hooks/useMousePosition";
 import { useAppStore } from "../store/app";
 import { useTools } from "../hooks/tools/index";
-import KonvaTransformer from "../hooks/transformer";
+
 import Konva from "konva";
 
 const appStore = useAppStore();
 
 const stage = ref<any>(null);
 const layer = ref<any>(null);
+
+const initBackground = (layer: Konva.Layer) => {
+  appStore.canvas.background = new Konva.Rect({
+    x: 0,
+    y: 0,
+    width: appStore.canvas.width,
+    height: appStore.canvas.height,
+    fill: "white",
+    listening: false,
+    name: "background",
+  });
+  layer.add(appStore.canvas.background as Konva.Rect);
+};
 
 onMounted(() => {
   useMousePosition(document.getElementById("canvas_minipaint"));
@@ -20,6 +33,8 @@ onMounted(() => {
   });
 
   layer.value = new Konva.Layer();
+  initBackground(layer.value);
+
   const rect = new Konva.Rect({
     x: 0,
     y: 0,
@@ -34,6 +49,12 @@ onMounted(() => {
   stage.value.add(layer.value);
   appStore.canvas.stage = stage.value;
   appStore.canvas.layer = layer.value;
+
+  stage.value.on("click", () => {
+    if (!appStore.activeTransform) return;
+    appStore.activeTransform.destroy();
+    appStore.activeTransform = null;
+  });
 });
 
 watch(

@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { useAppStore } from "../../store/app";
 
 const appStore = useAppStore();
 const toggle = computed(() => appStore.rightSideToggle[3]);
+
+watch(
+  () => appStore.currentElementInfos,
+  () => {
+    console.log(appStore.currentElementInfos);
+  }
+);
 </script>
 
 <template>
@@ -19,25 +26,14 @@ const toggle = computed(() => appStore.rightSideToggle[3]);
     <div class="content details-content" id="toggle_details" v-show="toggle">
       <div
         class="row"
-        v-for="(key, value, index) in appStore.currentElementInfos"
-        :key="key"
+        v-for="([key, value], index) in Object.entries(
+          appStore.currentElementInfos
+        )"
         v-if="appStore.currentElementInfos"
       >
-        <span class="trn label">{{ value }}:</span>
+        <span class="trn label">{{ key }}:</span>
 
-        <input
-          :type="
-            typeof key === 'number'
-              ? 'number'
-              : typeof value === 'string' && key.startsWith('#')
-              ? 'color'
-              : 'text'
-          "
-          id="detail_x"
-          step="any"
-          data-layer="1"
-          :value="key || 0"
-        />
+        <input id="detail_x" step="any" data-layer="1" :value="value || 0" />
         <button
           class="extra reset"
           type="button"

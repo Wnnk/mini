@@ -10,7 +10,7 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
   let currentText = "";
   let text: Konva.Text | null = null;
   let input: HTMLInputElement;
-  let tr: Konva.Transformer;
+  // let tr: Konva.Transformer;
 
   /**
    * @description 创建编辑区域
@@ -21,7 +21,7 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
     const x = pos.x;
     const y = pos.y;
     /* 清除上一次的编辑 */
-    if (tr && input) {
+    if (appStore.activeTransform && input) {
       enterEvent();
     }
     text = new Konva.Text({
@@ -35,13 +35,13 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
       name: `Text_${Math.floor(Math.random() * 10000)}`,
     });
     layer.add(text);
-    tr = new Konva.Transformer({
+    appStore.activeTransform = new Konva.Transformer({
       anchorSize: 10,
       borderStroke: "black",
       borderDash: [3, 3],
     });
-    layer.add(tr);
-    tr.nodes([text]);
+    layer.add(appStore.activeTransform as Konva.Transformer);
+    appStore.activeTransform.nodes([text]);
     layer.draw();
 
     /* 使用input记录输入文本,实现支持中文输入 */
@@ -68,7 +68,7 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
    **/
   const selectText = (e: KonvaEventObject<MouseEvent, Konva.Text>) => {
     /* 清除上一次的编辑 */
-    if (tr && input) {
+    if (appStore.activeTransform && input) {
       enterEvent();
     }
     e.cancelBubble = true;
@@ -79,13 +79,13 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
     console.log(text);
     currentText = text.attrs.text;
     input.value = currentText;
-    tr = new Konva.Transformer({
+    appStore.activeTransform = new Konva.Transformer({
       anchorSize: 10,
       borderStroke: "black",
       borderDash: [3, 3],
     });
-    layer.add(tr);
-    tr.nodes([text]);
+    layer.add(appStore.activeTransform as Konva.Transformer);
+    appStore.activeTransform.nodes([text]);
     layer.draw();
     requestAnimationFrame(() => {
       input.focus();
@@ -102,10 +102,11 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
 
   /* @description 编辑结束 */
   const enterEvent = () => {
+    if (!appStore.activeTransform) return;
     // if (!input) return;
     appStore.isEdit = false;
     // input.remove();
-    tr.destroy();
+    appStore.activeTransform.destroy();
     layer.draw();
   };
 
