@@ -8,7 +8,7 @@ export const updateElementInfos = (node: any) => {
     width = node.width();
     height = node.height();
   }
-  console.log(x, y, width, height);
+
   appStore.currentElementInfos = {
     id: node._id,
     x: Math.floor(x),

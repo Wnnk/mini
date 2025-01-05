@@ -18,8 +18,10 @@ export const gaussBlur = (
     console.error("Failed to get stage");
     return;
   }
-  const pos = stage.getPointerPosition();
+  const pos = konvaImage.getRelativePointerPosition();
+
   if (!pos) return;
+
   const xCenter = pos.x;
   const yCenter = pos.y;
 
@@ -45,25 +47,10 @@ export const gaussBlur = (
   const B_List_LENGTH = 3;
 
   /* 限定模糊的区域 */
-  const xStart = Math.max(0, xCenter - radius);
-  const xEnd = Math.min(width, xCenter + radius);
-  const yStart = Math.max(0, yCenter - radius);
-  const yEnd = Math.min(height, yCenter + radius);
-
-  console.log(
-    "centerX:",
-    xCenter,
-    "centerY:",
-    yCenter,
-    "xStart:",
-    xStart,
-    "xEnd:",
-    xEnd,
-    "yStart:",
-    yStart,
-    "yEnd:",
-    yEnd
-  );
+  const xStart = Math.max(0, xCenter);
+  const xEnd = Math.min(width, xCenter + 20);
+  const yStart = Math.max(0, yCenter);
+  const yEnd = Math.min(height, yCenter + 20);
 
   /* x方向 */
   for (let y = yStart; y < yEnd; y++) {
@@ -71,10 +58,12 @@ export const gaussBlur = (
       const bList = new Array(B_List_LENGTH).fill(0);
       gaussSum = 0;
 
+      /* 遍历邻居像素 */
       for (let j = -radius; j < radius; j++) {
+        /* x轴坐标 */
         const k = x + j;
         if (k >= 0 && k < width) {
-          const i = (y * width + k) * 4;
+          const i = (y * width + k) * 4; /* 4通道 */
           for (let l = 0; l < bList.length; l++) {
             bList[l] += pixes[i + l] * gaussMatrix[j + radius];
           }
@@ -117,5 +106,5 @@ export const gaussBlur = (
     return;
   }
 
-  context.putImageData(image, 200, 200);
+  context.putImageData(image, konvaImage.x(), konvaImage.y());
 };

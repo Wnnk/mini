@@ -1,5 +1,6 @@
 import Konva from "konva";
 import { useAppStore } from "../../store/app";
+import { watch } from "vue";
 
 export const useMedia = (state: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
@@ -17,7 +18,7 @@ export const useMedia = (state: Konva.Stage, layer: Konva.Layer) => {
         image: img,
         width: 200,
         height: 200,
-        draggable: true,
+        draggable: false,
         name: `image_${Math.floor(Math.random() * 10000)}`,
       });
       layer.add(image);
@@ -47,5 +48,11 @@ export const useMedia = (state: Konva.Stage, layer: Konva.Layer) => {
       createImage();
     }
   });
-  // document.addEventListener("mousedown", createImage)
+
+  watch(
+    () => appStore.tool,
+    () => {
+      state.off("click");
+    }
+  );
 };

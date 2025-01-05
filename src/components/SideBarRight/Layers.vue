@@ -3,6 +3,7 @@ import { ref, computed, defineProps, onMounted } from "vue";
 import { useAppStore } from "../../store/app";
 import Konva from "konva";
 import { selectTarget } from "../../hooks/selectTarget";
+
 const appStore = useAppStore();
 const toggle = computed(() => appStore.rightSideToggle[4]);
 
@@ -32,6 +33,10 @@ const destroyTarget = (className: string) => {
   const target = appStore.canvas.layer.findOne(`.${className}`);
   if (!target) return;
   target.destroy();
+  if (appStore.activeTransform) {
+    appStore.activeTransform.destroy();
+    appStore.activeTransform = null;
+  }
 };
 /**
  * @description: 切换指定类名的元素的可见性
