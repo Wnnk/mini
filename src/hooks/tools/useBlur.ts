@@ -2,6 +2,7 @@ import Konva from "konva";
 import { useAppStore } from "../../store/app";
 import { watch } from "vue";
 import { gaussBlur } from "../gaussBlur";
+import { blur } from "../blur";
 
 export const useBlur = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
@@ -9,18 +10,6 @@ export const useBlur = (stage: Konva.Stage, layer: Konva.Layer) => {
   let isDrawing = false;
   let activeImage: Konva.Image | null = null;
   let imageData: ImageData | null = null;
-  // const image = new Image();
-  // image.src = "src/assets/test.png";
-  // image.onload = () => {
-  //   const img = new Konva.Image({
-  //     x: 0,
-  //     y: 0,
-  //     image: image,
-  //     width: 300,
-  //     height: 300,
-  //   });
-  //   layer.add(img);
-  //   layer.draw();
 
   layer.children.forEach((child) => {
     if (!(child instanceof Konva.Image)) return;
@@ -28,22 +17,30 @@ export const useBlur = (stage: Konva.Stage, layer: Konva.Layer) => {
       event.cancelBubble = true;
       isDrawing = true;
       activeImage = child;
-      imageData = child
-        .getLayer()!
-        .getContext()
-        .getImageData(child.x(), child.y(), child.width(), child.height());
+      activeImage.draggable(false);
+      const context = child.getLayer()!.getContext();
+      imageData = context.getImageData(
+        child.x(),
+        child.y(),
+        child.width(),
+        child.height()
+      );
       activeImage.on("mousemove", mousemove);
       activeImage.on("mouseup", mouseup);
-      gaussBlur(activeImage, imageData, 10, 10);
+      const blurredData = gaussBlur(activeImage, imageData, 5, 2)!;
+      context.putImageData(blurredData, child.x(), child.y());
     });
   });
-  // };
 
   const mousemove = () => {
     if (!isDrawing) return;
     if (!activeImage) return;
     if (!imageData) return;
-    gaussBlur(activeImage, imageData, 10, 10);
+    const blurredData = gaussBlur(activeImage, imageData, 5, 5);
+
+    const context = activeImage.getLayer()!.getContext();
+    if (!blurredData) return;
+    // context.putImageData(blurredData, activeImage.x(), activeImage.y());
   };
 
   const mouseup = () => {

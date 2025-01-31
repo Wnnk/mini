@@ -98,6 +98,9 @@
 .sidebar_left .desaturate::after {
   background-image: url(../assets/desaturate.svg);
 }
+.sidebar_left .download::after {
+  background-image: url(../assets/download.svg);
+}
 
 #popups {
   position: absolute;

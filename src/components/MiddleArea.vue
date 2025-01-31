@@ -55,6 +55,56 @@ onMounted(() => {
     appStore.activeTransform.destroy();
     appStore.activeTransform = null;
   });
+
+  stage.value.on("wheel", (event: Konva.KonvaEventObject<WheelEvent>) => {
+    event.evt.preventDefault();
+    const maxWidth = document.getElementById("main_wrapper")!.clientWidth;
+    const maxHeight = document.getElementById("main_wrapper")!.clientHeight;
+    const pointer = stage.value.getPointerPosition();
+    const oldScaleX = stage.value.scaleX();
+    const oldScaleY = stage.value.scaleY();
+
+    if (event.evt.deltaY < 0) {
+      if (
+        appStore.wrapperStyle.width < maxWidth &&
+        appStore.wrapperStyle.height < maxHeight
+      ) {
+        appStore.wrapperStyle.width =
+          appStore.wrapperStyle.width * appStore.step;
+        appStore.wrapperStyle.height =
+          appStore.wrapperStyle.height * appStore.step;
+        const newScaleX = oldScaleX * appStore.step;
+        const newScaleY = oldScaleY * appStore.step;
+
+        stage.value.scale({
+          x: newScaleX,
+          y: newScaleY,
+        });
+
+        return;
+      }
+    } else {
+      if (
+        appStore.wrapperStyle.width > appStore.canvas.width &&
+        appStore.wrapperStyle.height > appStore.canvas.height
+      ) {
+        appStore.wrapperStyle.width =
+          appStore.wrapperStyle.width / appStore.step;
+
+        appStore.wrapperStyle.height =
+          appStore.wrapperStyle.height / appStore.step;
+
+        const newScaleX = oldScaleX / appStore.step;
+        const newScaleY = oldScaleY / appStore.step;
+
+        stage.value.scale({
+          x: newScaleX,
+          y: newScaleY,
+        });
+        return;
+      }
+    }
+  });
 });
 
 watch(
@@ -102,7 +152,7 @@ watch(
       <div
         class="canvas_wrapper"
         id="canvas_wrapper"
-        :style="`width:${appStore.canvas.width} ; height: ${appStore.canvas.height};`"
+        :style="`width:${appStore.wrapperStyle.width}px;height:${appStore.wrapperStyle.height}px;`"
       >
         <div
           class="transparent-grid white"
@@ -110,7 +160,7 @@ watch(
         ></div>
         <div
           id="canvas_minipaint"
-          :style="`width:${appStore.canvas.width} ; height: ${appStore.canvas.height};`"
+          :style="`width:${appStore.wrapperStyle.width}px;height:${appStore.wrapperStyle.height}px;`"
         ></div>
       </div>
     </div>

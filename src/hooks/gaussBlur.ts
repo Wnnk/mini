@@ -11,19 +11,20 @@ export const gaussBlur = (
   konvaImage: Konva.Image,
   image: ImageData,
   sigma: number = 10,
-  radius: number = 10
+  radius: number = 5
 ) => {
   const stage = konvaImage.getStage()!;
   if (!stage) {
     console.error("Failed to get stage");
     return;
   }
-  const pos = konvaImage.getRelativePointerPosition();
+  // const pos = konvaImage.getRelativePointerPosition();
+  const pos = stage.getPointerPosition();
 
   if (!pos) return;
 
-  const xCenter = pos.x;
-  const yCenter = pos.y;
+  const xCenter = Math.floor(pos.x - konvaImage.x());
+  const yCenter = Math.floor(pos.y - konvaImage.y());
 
   const pixes = image.data;
   const width = image.width;
@@ -47,10 +48,12 @@ export const gaussBlur = (
   const B_List_LENGTH = 3;
 
   /* 限定模糊的区域 */
-  const xStart = Math.max(0, xCenter);
-  const xEnd = Math.min(width, xCenter + 20);
-  const yStart = Math.max(0, yCenter);
-  const yEnd = Math.min(height, yCenter + 20);
+  const xStart = Math.max(0, xCenter - radius);
+  const xEnd = Math.min(width, xCenter + radius);
+  const yStart = Math.max(0, yCenter - radius);
+  const yEnd = Math.min(height, yCenter + radius);
+
+  console.log(xCenter, yCenter);
 
   /* x方向 */
   for (let y = yStart; y < yEnd; y++) {
@@ -107,4 +110,11 @@ export const gaussBlur = (
   }
 
   context.putImageData(image, konvaImage.x(), konvaImage.y());
+
+  return context.getImageData(
+    konvaImage.x(),
+    konvaImage.y(),
+    konvaImage.width(),
+    konvaImage.height()
+  );
 };

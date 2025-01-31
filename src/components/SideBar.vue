@@ -8,7 +8,7 @@ const appStore = useAppStore();
 const sidebarItems = [
   { id: "select", title: "选择对象工具" },
   { id: "selection", title: "选择工具" },
-  { id: "brush", title: "画刷" },
+  // { id: "brush", title: "画刷" },
   { id: "pencil", title: "铅笔" },
   { id: "pick_color", title: "取色器" },
   { id: "erase", title: "橡皮擦" },
@@ -20,6 +20,7 @@ const sidebarItems = [
   { id: "media", title: "图片" },
   { id: "crop", title: "裁剪" },
   { id: "blur", title: "模糊" },
+  { id: "download", title: "下载" },
   // { id: "sharpen", title: "锐化" },
   // { id: "desaturate", title: "饱和度" },
 ];
@@ -34,6 +35,8 @@ const switchTool = (id: string) => {
     toggleMedia.value = true;
   } else if (id === "shape") {
     toggleShape.value = true;
+  } else if (id === "download") {
+    toggleDownload.value = true;
   }
 };
 
@@ -85,7 +88,17 @@ const closeShapePopup = () => {
 const pickShape = (shapeType: string) => {
   appStore.shapeType = shapeType;
   toggleShape.value = false;
-}
+};
+
+/* 保存下载 */
+const toggleDownload = ref(false);
+const closeDownloadPopup = () => {
+  toggleDownload.value = false;
+};
+const saveAsImage = (type: string) => {
+  appStore.download = type;
+  toggleDownload.value = false;
+};
 </script>
 
 <template>
@@ -123,7 +136,12 @@ const pickShape = (shapeType: string) => {
     <div class="popup wide">
       <div class="dialog_content">
         <div class="flex-container">
-          <div class="shape-item" v-for="item in shapeItems" :key="item.id" @click="pickShape(item.id)">
+          <div
+            class="shape-item"
+            v-for="item in shapeItems"
+            :key="item.id"
+            @click="pickShape(item.id)"
+          >
             <img
               :src="item.url"
               width="150px"
@@ -142,6 +160,27 @@ const pickShape = (shapeType: string) => {
             ×
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="popups" v-show="toggleDownload">
+    <div class="popup wide">
+      <div>
+        <button
+          type="button"
+          class="btn btn-primary"
+          @click="saveAsImage('png')"
+        >
+          保存为图片
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          @click="saveAsImage('json')"
+        >
+          保存为JSON
+        </button>
       </div>
     </div>
   </div>
