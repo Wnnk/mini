@@ -3,7 +3,7 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { useMousePosition } from "../hooks/useMousePosition";
 import { useAppStore } from "../store/app";
 import { useTools } from "../hooks/tools/index";
-
+import { wheelScale } from "../utils/wheelScale";
 import Konva from "konva";
 
 const appStore = useAppStore();
@@ -35,74 +35,31 @@ onMounted(() => {
   layer.value = new Konva.Layer();
   initBackground(layer.value);
 
-  const rect = new Konva.Rect({
-    x: 0,
-    y: 0,
-    width: 300,
-    height: 200,
-    fill: "red",
-    name: `test`,
-  });
-  layer.value.add(rect);
-
-  layer.value.draw();
   stage.value.add(layer.value);
   appStore.canvas.stage = stage.value;
   appStore.canvas.layer = layer.value;
 
+  /*  监听画布点击 */
   stage.value.on("click", () => {
     if (!appStore.activeTransform) return;
     appStore.activeTransform.destroy();
     appStore.activeTransform = null;
   });
-
+  /* 鼠标滚轮缩放 */
   stage.value.on("wheel", (event: Konva.KonvaEventObject<WheelEvent>) => {
-    event.evt.preventDefault();
-    const maxWidth = document.getElementById("main_wrapper")!.clientWidth;
-    const maxHeight = document.getElementById("main_wrapper")!.clientHeight;
-    const pointer = stage.value.getPointerPosition();
-    const oldScaleX = stage.value.scaleX();
-    const oldScaleY = stage.value.scaleY();
-
-    if (event.evt.deltaY < 0) {
-      if (
-        appStore.wrapperStyle.width < maxWidth &&
-        appStore.wrapperStyle.height < maxHeight
-      ) {
-        appStore.wrapperStyle.width =
-          appStore.wrapperStyle.width * appStore.step;
-        appStore.wrapperStyle.height =
-          appStore.wrapperStyle.height * appStore.step;
-        const newScaleX = oldScaleX * appStore.step;
-        const newScaleY = oldScaleY * appStore.step;
-
-        stage.value.scale({
-          x: newScaleX,
-          y: newScaleY,
-        });
-
-        return;
-      }
-    } else {
-      if (
-        appStore.wrapperStyle.width > appStore.canvas.width &&
-        appStore.wrapperStyle.height > appStore.canvas.height
-      ) {
-        appStore.wrapperStyle.width =
-          appStore.wrapperStyle.width / appStore.step;
-
-        appStore.wrapperStyle.height =
-          appStore.wrapperStyle.height / appStore.step;
-
-        const newScaleX = oldScaleX / appStore.step;
-        const newScaleY = oldScaleY / appStore.step;
-
-        stage.value.scale({
-          x: newScaleX,
-          y: newScaleY,
-        });
-        return;
-      }
+    wheelScale(stage.value, event);
+  });
+  /* 监听画布清除 */
+  window.ipcRenderer.on("clear-canvas", () => {
+    layer.value.destroyChildren();
+  });
+  /* 监听画布引入 */
+  window.ipcRenderer.on("open-json", (_, data) => {
+    try {
+      stage.value = Konva.Node.create(data, "canvas_minipaint");
+      layer.value = stage.value.children[0];
+    } catch (error) {
+      console.error(error);
     }
   });
 });
@@ -115,6 +72,13 @@ watch(
     }
   }
 );
+
+watch([stage, layer], () => {
+  console.log("stage, layer changed");
+  appStore.canvas.stage = stage.value;
+  appStore.canvas.layer = layer.value;
+  console.log(appStore.canvas.stage, appStore.canvas.layer);
+});
 
 const updatePreview = () => {
   const layer = appStore.canvas.layer;

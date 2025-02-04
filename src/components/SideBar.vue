@@ -181,6 +181,15 @@ const saveAsImage = (type: string) => {
         >
           保存为JSON
         </button>
+        <button
+          type="button"
+          class="close"
+          data-id="popup_close"
+          title="Close"
+          @click="closeDownloadPopup"
+        >
+          ×
+        </button>
       </div>
     </div>
   </div>

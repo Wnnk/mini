@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import MainMenus from './components/MainMenus.vue';
-import SubMenus from './components/SubMenus.vue';
-import SideBar from './components/SideBar.vue';
-import SideBarRight from './components/SideBarRight/SideBarRight.vue';
-import MiddleArea from './components/MiddleArea.vue';
+import MainMenus from "./components/MainMenus.vue";
+import SubMenus from "./components/SubMenus.vue";
+import SideBar from "./components/SideBar.vue";
+import SideBarRight from "./components/SideBarRight/SideBarRight.vue";
+import MiddleArea from "./components/MiddleArea.vue";
+
+import { onMounted } from "vue";
 </script>
 
 <template>
   <div class="wrapper">
-    <MainMenus />
+    <!-- <MainMenus /> -->
     <SubMenus />
     <SideBar />
     <MiddleArea />
@@ -31,7 +33,7 @@ import MiddleArea from './components/MiddleArea.vue';
 }
 
 .logo.electron:hover {
-  filter: drop-shadow(0 0 2em #9FEAF9);
+  filter: drop-shadow(0 0 2em #9feaf9);
 }
 
 .logo:hover {
