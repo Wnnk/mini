@@ -48,7 +48,7 @@ const closePopup = () => {
  * @description: 打开图片选择弹窗
  * @param {Event} e 点击事件
  */
-const fileTypes = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
+const fileTypes = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg"];
 const toggleMedia = ref(false);
 const pickFile = (e: Event) => {
   if (!e.target) return;

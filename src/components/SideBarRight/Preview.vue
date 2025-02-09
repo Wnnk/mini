@@ -39,7 +39,7 @@ onMounted(() => {
       :class="['trn', 'toggle', { toggled: !toggle }]"
       @click="appStore.rightSideToggle[0] = !toggle"
     >
-      预览
+      {{ $t("preview") }}
     </h2>
     <div id="toggle_preview" v-show="toggle">
       <div class="canvas_preview_wrapper">

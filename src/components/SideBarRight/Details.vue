@@ -21,7 +21,7 @@ watch(
       data-trn-key="图层"
       @click="appStore.rightSideToggle[3] = !toggle"
     >
-      细节
+      {{ $t("details") }}
     </h2>
     <div class="content details-content" id="toggle_details" v-show="toggle">
       <div

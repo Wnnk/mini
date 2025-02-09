@@ -1,26 +1,31 @@
 <script setup lang='ts'>
-const menuItem  = [
-  {name: '文件'},
-  {name: '编辑'},
-  {name: '视图'},
-]
+import { t } from "../language/index"
+import { useI18n } from "vue-i18n"
+import { ref, computed, reactive } from "vue"
+import { setLocal } from "../utils/local"
+import { LANG } from '../config/constants/app'
 
-const demo = (item: string) => {
-  console.log(item); 
+const { locale, tm } = useI18n();
+
+const Language = tm('language_map')
+
+
+const setLanguage = (type: string) => {
+  setLocal(LANG, type)
+  locale.value = type
 }
+const localeMap = computed(() => {
+  return tm('language_map')
+})
+
 </script>
 
 <template>
   <nav class="main_menu">
-    <ul class="menu_bar">
-      <li v-for="item in menuItem" :key="item.name" @click="demo(item.name)">
-        <a>
-          <span>
-            {{ item.name }}
-          </span>
-        </a>
-      </li>
-    </ul>
+    <!-- <div v-for="(lang,key) in localeMap" @click="setLanguage(key)"> {{ lang }}</div> -->
+     <select v-model="locale" class="language_select">
+       <option v-for="(lang,key) in localeMap" :value="key">{{ lang }}</option>
+     </select>
   </nav>
 </template>
 

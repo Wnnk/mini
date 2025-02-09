@@ -14,16 +14,16 @@ const toggle = computed(() => appStore.rightSideToggle[2]);
       data-trn-key="信息"
       @click="appStore.rightSideToggle[2] = !toggle"
     >
-      信息
+      {{$t('info')}}
     </h2>
     <div class="content" id="toggle_info" v-show="toggle">
-      <span class="trn label">Szie:</span>
+      <span class="trn label">{{$t("size")}}:</span>
       <span id="mouse_info_size"
         >{{ appStore.canvas.width }} x {{ appStore.canvas.height }}</span
       >
       <span class="id-mouse_info_units">px</span>
       <br />
-      <span class="trn label">Mouse:</span>
+      <span class="trn label">{{$t("mousePosition")}}:</span>
       <span id="mouse_info_mouse"
         >{{ appStore.info.x }}, {{ appStore.info.y }}</span
       >

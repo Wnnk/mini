@@ -5,7 +5,7 @@ import path from "node:path";
 import os from "node:os";
 import { template } from "./menu";
 
-import { createHoverBall } from "./hoverBall";
+
 
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

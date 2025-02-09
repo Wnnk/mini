@@ -1,0 +1,34 @@
+{
+  "toolSidebar": [
+    { "id": "select", "title": "select" },
+    { "id": "selection", "title": "selection" },
+    { "id": "pencil", "title": "pencil" },
+    { "id": "pick_color", "title": "pick_color" },
+    { "id": "erase", "title": "erase" },
+    { "id": "fill", "title": "fill" },
+    { "id": "shape", "title": "shape" },
+    { "id": "lasso", "title": "lasso" },
+    { "id": "text", "title": "text" },
+    { "id": "media", "title": "media" },
+    { "id": "crop", "title": "crop" },
+    { "id": "blur", "title": "blur" },
+    { "id": "download", "title": "download" }
+  ],
+  "language": "Language",
+  "language_map":{
+    "zh":"中文",
+    "en": "英文"
+  },
+  "details": "Details",
+  "preview": "Preview",
+  "info": "Info",
+  "layers": "Layers",
+  "select_element": "Please choose an element first",
+  "size": "Size",
+  "mousePosition": "Mouse",
+  "colorPick": "ColorPick",
+  "toggle_color_picker": "Toggle color picker",
+  "toggle_color_channels": "Toggle color channels",
+  "toggle_swatches": "Toggle swatches"
+
+}

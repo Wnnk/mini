@@ -10,7 +10,7 @@ import { onMounted } from "vue";
 
 <template>
   <div class="wrapper">
-    <!-- <MainMenus /> -->
+    <MainMenus />
     <SubMenus />
     <SideBar />
     <MiddleArea />

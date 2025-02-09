@@ -74,10 +74,8 @@ watch(
 );
 
 watch([stage, layer], () => {
-  console.log("stage, layer changed");
   appStore.canvas.stage = stage.value;
   appStore.canvas.layer = layer.value;
-  console.log(appStore.canvas.stage, appStore.canvas.layer);
 });
 
 const updatePreview = () => {

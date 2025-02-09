@@ -6,6 +6,7 @@ import { useAppStore } from "../../store/app";
 const appStore = useAppStore();
 const toggle = computed(() => appStore.rightSideToggle[1]);
 import { hsvToRgb, hsvToHex } from "../../utils/color";
+import { t } from "../../language/index"
 
 onMounted(() => {
   /* 
@@ -118,7 +119,7 @@ const adjustHue = (event: MouseEvent) => {
       :class="['trn', 'toggle', { toggled: !toggle }]"
       @click="appStore.rightSideToggle[1] = !toggle"
     >
-      颜色
+      {{$t("colorPick")}}
     </h2>
     <div class="content" id="toggle_colors" v-show="toggle">
       <div class="ui_flex_group justify_content_space_between stacked">
@@ -136,11 +137,11 @@ const adjustHue = (event: MouseEvent) => {
           <!-- Color Picker -->
           <button
             id="toggle_color_picker_section_button"
-            title="Toggle Color Picker"
+            :title="t('toggle_color_picker')"
             :aria-pressed="buttonGroup[0]"
             @click="toggleColorPicker(0)"
           >
-            <span class="sr_only">Toggle Color Picker</span>
+            <span class="sr_only">{{ $t('toggle_color_picker') }}</span>
             <svg
               width="1em"
               height="1em"
@@ -169,10 +170,10 @@ const adjustHue = (event: MouseEvent) => {
             id="toggle_color_channels_section_button"
             :aria-pressed="buttonGroup[1]"
             class="ui_icon_button"
-            title="Toggle Color Channels"
+            :title="t('toggle_color_channels')"
             @click="toggleColorPicker(1)"
           >
-            <span class="sr_only">Toggle Color Channels</span>
+            <span class="sr_only">{{ $t('toggle_color_channels') }}</span>
             <svg
               width="1em"
               height="1em"
@@ -200,10 +201,10 @@ const adjustHue = (event: MouseEvent) => {
             id="toggle_color_swatches_section_button"
             :aria-pressed="buttonGroup[2]"
             class="ui_icon_button"
-            title="Toggle Swatches"
+            :title="t('toggle_swatches')"
             @click="toggleColorPicker(2)"
           >
-            <span class="sr_only">Toggle Swatches</span>
+            <span class="sr_only">{{ $t('toggle_swatches') }}</span>
             <svg
               width="1em"
               height="1em"

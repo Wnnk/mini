@@ -80,7 +80,7 @@ const updateLayers = (className: string, type: string) => {
       data-trn-key="图层"
       @click="appStore.rightSideToggle[4] = !toggle"
     >
-      图层
+      {{ $t('layers') }}
     </h2>
     <div class="content" id="layers_base" v-show="toggle">
       <button
