@@ -4,6 +4,7 @@ import { useMousePosition } from "../hooks/useMousePosition";
 import { useAppStore } from "../store/app";
 import { useTools } from "../hooks/tools/index";
 import { wheelScale } from "../utils/wheelScale";
+import { updatePreview } from "../utils/updatePreview";
 import Konva from "konva";
 
 const appStore = useAppStore();
@@ -34,7 +35,22 @@ onMounted(() => {
 
   layer.value = new Konva.Layer();
   initBackground(layer.value);
-
+  const rect = new Konva.Rect({
+    x: 0,
+    y: 0,
+    width: 500,
+    height: 500,
+    fill: "red",
+  })
+  const rect2 = new Konva.Rect({
+    x: 50,
+    y: 50,
+    width: 200,
+    height: 200,
+    fill: "blue",
+  })
+  layer.value.add(rect);
+  layer.value.add(rect2);
   stage.value.add(layer.value);
   appStore.canvas.stage = stage.value;
   appStore.canvas.layer = layer.value;
@@ -78,26 +94,12 @@ watch([stage, layer], () => {
   appStore.canvas.layer = layer.value;
 });
 
-const updatePreview = () => {
-  const layer = appStore.canvas.layer;
-  const previewLayer = appStore.canvas.previewLayer;
-  const previewStage = appStore.canvas.previewStage;
-  if (!layer || !previewLayer || !previewStage) return;
-  /* 更新预览层 */
-  previewLayer.destroy();
-  appStore.canvas.previewLayer = layer.clone({ listening: false });
-  const scaleX = 176 / appStore.canvas.width;
-  const scaleY = 176 / appStore.canvas.height;
-  const scale = Math.min(scaleX, scaleY);
-  appStore.canvas.previewLayer.scale({ x: scale, y: scale });
-  appStore.canvas.previewStage!.add(
-    appStore.canvas.previewLayer as Konva.Layer
-  );
-};
+
 
 watch(
   () => appStore.canvas.layer,
   () => {
+    console.log("update preview")
     updatePreview();
   },
   {

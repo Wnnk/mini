@@ -5,6 +5,7 @@ import { useSelect } from "./useSelect";
 import { useSelection } from "./useSelection";
 import Konva from "konva";
 import { usePickColor } from "./usePickColor";
+import { useErase } from "./useErase";
 import { useMedia } from "./useMedia";
 import { useFill } from "./useFill";
 import { useLasso } from "./useLasso";
@@ -24,6 +25,8 @@ export const useTools = (stage: Konva.Stage, layer: Konva.Layer) => {
       return usePencil(stage, layer);
     case "pick_color":
       return usePickColor(stage, layer);
+    case "erase":
+      return useErase(stage, layer);
     case "fill":
       return useFill(stage, layer);
     case "shape":
