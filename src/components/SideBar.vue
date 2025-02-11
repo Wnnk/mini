@@ -183,6 +183,13 @@ const saveAsImage = (type: string) => {
         </button>
         <button
           type="button"
+          class="btn btn-secondary"
+          @click="saveAsImage('pdf')"
+        >
+          保存为PDF
+        </button>
+        <button
+          type="button"
           class="close"
           data-id="popup_close"
           title="Close"

@@ -12,17 +12,8 @@ const appStore = useAppStore();
 const stage = ref<any>(null);
 const layer = ref<any>(null);
 
-const initBackground = (layer: Konva.Layer) => {
-  appStore.canvas.background = new Konva.Rect({
-    x: 0,
-    y: 0,
-    width: appStore.canvas.width,
-    height: appStore.canvas.height,
-    fill: "white",
-    listening: false,
-    name: "background",
-  });
-  layer.add(appStore.canvas.background as Konva.Rect);
+const initBackground = () => {
+  document.getElementById('canvas_minipaint')!.style.backgroundColor = "white"
 };
 
 onMounted(() => {
@@ -32,9 +23,8 @@ onMounted(() => {
     width: appStore.canvas.width,
     height: appStore.canvas.height,
   });
-
+  initBackground();
   layer.value = new Konva.Layer();
-  initBackground(layer.value);
   const rect = new Konva.Rect({
     x: 0,
     y: 0,
@@ -42,16 +32,14 @@ onMounted(() => {
     height: 500,
     fill: "red",
   })
-  const rect2 = new Konva.Rect({
-    x: 50,
-    y: 50,
-    width: 200,
-    height: 200,
-    fill: "blue",
-  })
+
   layer.value.add(rect);
-  layer.value.add(rect2);
   stage.value.add(layer.value);
+
+
+
+
+
   appStore.canvas.stage = stage.value;
   appStore.canvas.layer = layer.value;
 
@@ -106,9 +94,15 @@ watch(
     deep: true,
   }
 );
+
+const changeColor = () => {
+ document.getElementById('canvas_minipaint')!.style.backgroundColor = `#${Math.floor(Math.random()*16777215).toString(16)}`
+
+}
 </script>
 
 <template>
+  <button @click="changeColor" type="button">改变颜色</button>
   <div :class="['middle_area']" id="middle_area">
     <canvas class="ruler_left" id="ruler_left"></canvas>
     <canvas class="ruler_top" id="ruler_top"></canvas>
@@ -118,10 +112,10 @@ watch(
         id="canvas_wrapper"
         :style="`width:${appStore.wrapperStyle.width}px;height:${appStore.wrapperStyle.height}px;`"
       >
-        <div
+        <!-- <div
           class="transparent-grid white"
           id="canvas_minipaint_background"
-        ></div>
+        ></div> -->
         <div
           id="canvas_minipaint"
           :style="`width:${appStore.wrapperStyle.width}px;height:${appStore.wrapperStyle.height}px;`"

@@ -3,7 +3,6 @@ import { useAppStore } from "../../store/app";
 import { watch } from "vue";
 
 
-
 export const useErase = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
   if(appStore.tool !== "erase") return;
@@ -19,7 +18,7 @@ export const useErase = (stage: Konva.Stage, layer: Konva.Layer) => {
     };
     currentLine = new Konva.Line({
       points: [p1.x, p1.y],
-      stroke: 'white', // 设置擦除颜色为白色
+      stroke: "white",
       strokeWidth: 15,
       lineCap: 'round',
       lineJoin: 'round',
