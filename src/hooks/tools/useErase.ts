@@ -23,6 +23,7 @@ export const useErase = (stage: Konva.Stage, layer: Konva.Layer) => {
       lineCap: 'round',
       lineJoin: 'round',
       globalCompositeOperation: 'destination-out', // 设置合成操作为擦除
+      name: `Erase`,
     });
     layer.add(currentLine);
     layer.batchDraw();

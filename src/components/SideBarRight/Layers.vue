@@ -10,9 +10,11 @@ const toggle = computed(() => appStore.rightSideToggle[4]);
 const lyaerList = computed(() => {
   if (!appStore.canvas.layer) return [];
   return appStore.canvas.layer.children.filter((item: any) => {
-    return item.getType() !== "Group";
+    console.log(item.name());
+    return item.getType() !== "Group" && item.name() !== "Erase";
   });
 });
+
 const activeName = ref("");
 
 /**

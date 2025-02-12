@@ -36,6 +36,7 @@ onMounted(() => {
     width: 500,
     height: 500,
     fill: "red",
+    name: "test"
   })
 
   layer.value.add(rect);
@@ -43,6 +44,8 @@ onMounted(() => {
 
   appStore.canvas.stage = stage.value;
   appStore.canvas.layer = layer.value;
+
+  console.log(layer.value)
 
   /*  监听画布点击 */
   stage.value.on("click", () => {
