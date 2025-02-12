@@ -1,0 +1,24 @@
+@use "var" as *;
+
+#context-menu{
+  position: absolute;
+  // left: 0;
+  // top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  border-radius: $input-border-radius;
+  border: 1px solid $border-color;
+  background-color: $input-background-color;
+  cursor: pointer;
+}
+
+.menu-item {
+  padding: 0 5px;
+  width: 100%;
+  &:hover {
+    background-color:$background-color-active;
+  }
+}

@@ -1,6 +1,7 @@
 import Konva from "konva";
 import { useAppStore } from "../../store/app";
 import { watch } from "vue";
+import { jsPDF } from "jspdf";
 
 export const useDownload = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
@@ -48,6 +49,17 @@ export const useDownload = (stage: Konva.Stage, layer: Konva.Layer) => {
       const url = URL.createObjectURL(blob);
       creatHref(url, filename);
       URL.revokeObjectURL(url);
+    } else if (downloadType === "pdf") {
+      stage.toDataURL({
+        mimeType: 'image/png',
+        quality: 1,
+        callback: (dataUrl) => {
+          const pdf = new jsPDF();
+          pdf.addImage(dataUrl, 'PNG', 0, 0, stage.width(), stage.height());
+          pdf.save(`${Date.now()}.pdf`);
+        }
+      })
+    
     }
   };
 

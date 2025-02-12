@@ -5,6 +5,8 @@ import { useAppStore } from "../store/app";
 import { useTools } from "../hooks/tools/index";
 import { wheelScale } from "../utils/wheelScale";
 import { updatePreview } from "../utils/updatePreview";
+import { contextMenu } from '../utils/contextMenu'
+import ContextMenu from "./ContextMenu/ContextMenu.vue";
 import Konva from "konva";
 
 const appStore = useAppStore();
@@ -12,6 +14,9 @@ const appStore = useAppStore();
 const stage = ref<any>(null);
 const layer = ref<any>(null);
 
+/** 
+ * @description: 初始化画布背景色
+  */
 const initBackground = () => {
   document.getElementById('canvas_minipaint')!.style.backgroundColor = "white"
 };
@@ -36,10 +41,6 @@ onMounted(() => {
   layer.value.add(rect);
   stage.value.add(layer.value);
 
-
-
-
-
   appStore.canvas.stage = stage.value;
   appStore.canvas.layer = layer.value;
 
@@ -53,6 +54,12 @@ onMounted(() => {
   stage.value.on("wheel", (event: Konva.KonvaEventObject<WheelEvent>) => {
     wheelScale(stage.value, event);
   });
+  /* 监听画布右键菜单 */
+  stage.value.on("contextmenu", (event: Konva.KonvaEventObject<MouseEvent>) => {
+    toggleMenu();
+  })
+
+
   /* 监听画布清除 */
   window.ipcRenderer.on("clear-canvas", () => {
     layer.value.destroyChildren();
@@ -82,8 +89,6 @@ watch([stage, layer], () => {
   appStore.canvas.layer = layer.value;
 });
 
-
-
 watch(
   () => appStore.canvas.layer,
   () => {
@@ -95,10 +100,29 @@ watch(
   }
 );
 
+/** 
+ * @description: 改变画布背景色
+  */
 const changeColor = () => {
- document.getElementById('canvas_minipaint')!.style.backgroundColor = `#${Math.floor(Math.random()*16777215).toString(16)}`
-
+ document.getElementById('canvas_minipaint')!.style.backgroundColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
 }
+
+const menuToggle = ref(false);
+const togglePosition = ref({x: 0, y: 0})
+/** 
+ * @description: 右键菜单显示隐藏
+*/
+const toggleMenu = () => {
+  menuToggle.value =!menuToggle.value;
+  if(menuToggle.value){
+    const {x, y} = stage.value.getPointerPosition();
+    togglePosition.value = {x, y};
+    console.log(togglePosition.value)
+  }
+  return;
+}
+
+
 </script>
 
 <template>
@@ -120,6 +144,13 @@ const changeColor = () => {
           id="canvas_minipaint"
           :style="`width:${appStore.wrapperStyle.width}px;height:${appStore.wrapperStyle.height}px;`"
         ></div>
+
+        <!-- 右键菜单 -->
+         <ContextMenu 
+          v-show="menuToggle"
+          v-model="menuToggle"
+          :style="`top:${togglePosition.y}px;left:${togglePosition.x}px;`"
+          />
       </div>
     </div>
   </div>
