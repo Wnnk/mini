@@ -5,7 +5,9 @@ import { watch } from "vue";
 export const useMedia = (state: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
   if (appStore.tool !== "media") return;
-  let transformer = new Konva.Transformer();
+  let transformer = new Konva.Transformer({
+    name: "transformer",
+  });
   const createImage = () => {
     if (appStore.isEdit || !appStore.file) return;
     const { x, y } = appStore.info;

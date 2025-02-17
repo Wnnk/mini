@@ -16,10 +16,11 @@ export const useSelection = (stage: Konva.Stage, layer: Konva.Layer) => {
     visible: true,
   });
   // let transformer = <Konva.Transformer | null>null;
-  layer.add(selectionBox);
+
   const mouseDown = () => {
     if (isSelect) return;
     if (appStore.activeTransform) return;
+    layer.add(selectionBox);
     isSelect = true;
     const pos = stage.getPointerPosition()!;
     selectionBox.visible(true);
@@ -72,6 +73,7 @@ export const useSelection = (stage: Konva.Stage, layer: Konva.Layer) => {
     const group = new Konva.Group({
       x: selectionBox.x(),
       y: selectionBox.y(),
+      name: `Group_${Math.floor(Math.random() * 10000)}`,
     });
     for (const child of selectedList) {
       group.add(child);
@@ -83,7 +85,8 @@ export const useSelection = (stage: Konva.Stage, layer: Konva.Layer) => {
     appStore.activeTransform = new Konva.Transformer({
       anchorSize: 10,
       borderStroke: "black",
-      // borderDash: [3, 3],
+      name: "transformer",
+      draggable: true,
     });
 
     appStore.activeTransform.nodes([group]);
@@ -106,6 +109,7 @@ export const useSelection = (stage: Konva.Stage, layer: Konva.Layer) => {
       stage.off("mouseleave", mouseUp);
       appStore.activeTransform?.destroy();
       appStore.isEdit = false;
+      selectionBox.remove();
     }
   );
 };

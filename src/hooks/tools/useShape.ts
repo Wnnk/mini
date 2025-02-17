@@ -6,7 +6,6 @@ import { watch } from "vue";
 export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
   let shape: any = null;
-  // let transformer: Konva.Transformer | null = null;
   const createRectangle = (
     x: number,
     y: number,
@@ -21,6 +20,7 @@ export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
       stroke: hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v),
       strokeWidth: 1,
       draggable: true,
+      fill: Konva.Util.getRandomColor(),
       name: `Rectangle_${Math.floor(Math.random() * 10000)}`,
     });
   };
@@ -33,6 +33,7 @@ export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
       stroke: hsvToHex(appStore.hsv.h, appStore.hsv.s, appStore.hsv.v),
       strokeWidth: 1,
       draggable: true,
+      fill: Konva.Util.getRandomColor(),
       name: `Circle_${Math.floor(Math.random() * 10000)}`,
     });
   };
@@ -49,6 +50,7 @@ export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
       strokeWidth: 1,
       closed: true,
       draggable: true,
+      fill: Konva.Util.getRandomColor(),
       name: `Triangle_${Math.floor(Math.random() * 10000)}`,
     });
   };
@@ -64,12 +66,15 @@ export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
       strokeWidth: 1,
       closed: true,
       draggable: true,
+      fill: Konva.Util.getRandomColor(),
       name: `IsoscelesTriangle_${Math.floor(Math.random() * 10000)}`,
     });
   };
 
   const transformShape = (shape: any) => {
-    appStore.activeTransform = new Konva.Transformer();
+    appStore.activeTransform = new Konva.Transformer({
+      name: "transformer",
+    });
     appStore.activeTransform.nodes([shape]);
     layer.add(appStore.activeTransform as Konva.Transformer);
   };
@@ -107,7 +112,7 @@ export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
       default:
         break;
     }
-    shape.on("click", transformShape(shape));
+    transformShape(shape);
     layer.add(shape);
     layer.draw();
   };
@@ -117,11 +122,15 @@ export const useShape = (stage: Konva.Stage, layer: Konva.Layer) => {
   watch(
     () => appStore.tool,
     () => {
+      if (appStore.activeTransform) {
+        layer.find('Transformer').forEach((transformer) => transformer.destroy());
+        appStore.activeTransform = null;
+        layer.draw();
+      }
       stage.off("click", mouseDown);
-      shape?.off("click", transformShape(shape));
-      appStore.activeTransform?.destroy();
+
       shape = null;
-      appStore.activeTransform = null;
+ 
     }
   );
 };

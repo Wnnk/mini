@@ -10,8 +10,7 @@ const toggle = computed(() => appStore.rightSideToggle[4]);
 const lyaerList = computed(() => {
   if (!appStore.canvas.layer) return [];
   return appStore.canvas.layer.children.filter((item: any) => {
-    console.log(item.name());
-    return item.getType() !== "Group" && item.name() !== "Erase";
+    return item.name() !== "transformer" && item.name() !== "Erase";
   });
 });
 

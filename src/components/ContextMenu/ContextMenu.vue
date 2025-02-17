@@ -1,6 +1,6 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
-import { resetStage } from './MenuTools'
+import { resetStage, unGroup } from './MenuTools'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -8,7 +8,7 @@ const menuItem = [
   {id:1, label: "重置画布"},
   {id:2, label: "撤销"},
   {id:3, label: "恢复"},
-  {id:4, label: "还原画布"}
+  {id:4, label: "拆分"}
 ]
 
 
@@ -23,6 +23,7 @@ const useMenuTools = (id: number) => {
     case 3:
       break;
     case 4:
+      unGroup()
       break;
     default:
       break;

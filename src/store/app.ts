@@ -2,12 +2,12 @@ import { defineStore } from "pinia";
 import Konva from "konva";
 
 type ElementInfo = {
-  id: string;
+  id: number;
   x: number;
   y: number;
   width: number;
   height: number;
-  fill: string;
+  // fill: string;
   rotate: number;
   opacity: number;
 };
@@ -16,7 +16,7 @@ export const useAppStore = defineStore("app", {
   state: () => ({
     hsv: { h: 0, s: 0, v: 0 } /* hsv color */,
     info: { x: 0, y: 0 } /* mouse position */,
-    rightSideToggle: [true, true, true, false, true] /* 右侧面板开关 */,
+    rightSideToggle: [false, false, false, false, true] /* 右侧面板开关 */,
     canvas: {
       width: 600,
       height: 600,

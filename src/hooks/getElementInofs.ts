@@ -17,6 +17,6 @@ export const updateElementInfos = (node: any) => {
     height: Math.floor(height),
     rotate: node.rotation(),
     opacity: node.opacity(),
-    fill: node.stroke(),
+    // fill: node.stroke(),
   };
 };

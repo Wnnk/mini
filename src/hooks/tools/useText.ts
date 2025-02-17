@@ -41,6 +41,7 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
       anchorSize: 10,
       borderStroke: "black",
       borderDash: [3, 3],
+      name: "transformer"
     });
     layer.add(appStore.activeTransform as Konva.Transformer);
     appStore.activeTransform.nodes([text]);
@@ -144,6 +145,7 @@ export function useText(stage: Konva.Stage, layer: Konva.Layer) {
       anchorSize: 10,
       borderStroke: "black",
       borderDash: [3, 3],
+      name: "transformer"
     });
     layer.add(appStore.activeTransform as Konva.Transformer);
     appStore.activeTransform.nodes([text]);

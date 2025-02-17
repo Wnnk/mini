@@ -5,12 +5,7 @@ import { useAppStore } from "../../store/app";
 const appStore = useAppStore();
 const toggle = computed(() => appStore.rightSideToggle[3]);
 
-watch(
-  () => appStore.currentElementInfos,
-  () => {
-    console.log(appStore.currentElementInfos);
-  }
-);
+
 </script>
 
 <template>

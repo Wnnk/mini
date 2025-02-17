@@ -9,6 +9,7 @@ import { contextMenu } from '../utils/contextMenu'
 import ContextMenu from "./ContextMenu/ContextMenu.vue";
 import Konva from "konva";
 
+
 const appStore = useAppStore();
 
 const stage = ref<any>(null);
@@ -30,22 +31,13 @@ onMounted(() => {
   });
   initBackground();
   layer.value = new Konva.Layer();
-  const rect = new Konva.Rect({
-    x: 0,
-    y: 0,
-    width: 500,
-    height: 500,
-    fill: "red",
-    name: "test"
-  })
-
-  layer.value.add(rect);
+ 
   stage.value.add(layer.value);
-
+  // testMove(stage.value, layer.value)
   appStore.canvas.stage = stage.value;
   appStore.canvas.layer = layer.value;
 
-  console.log(layer.value)
+ 
 
   /*  监听画布点击 */
   stage.value.on("click", () => {
@@ -92,16 +84,16 @@ watch([stage, layer], () => {
   appStore.canvas.layer = layer.value;
 });
 
-watch(
-  () => appStore.canvas.layer,
-  () => {
-    console.log("update preview")
-    updatePreview();
-  },
-  {
-    deep: true,
-  }
-);
+// watch(
+//   () => appStore.canvas.layer,
+//   () => {
+//     console.log("update preview")
+//     updatePreview();
+//   },
+//   {
+//     deep: true,
+//   }
+// );
 
 /** 
  * @description: 改变画布背景色

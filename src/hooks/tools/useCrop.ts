@@ -51,7 +51,7 @@ export const useCrop = (stage: Konva.Stage, layer: Konva.Layer) => {
       borderStroke: `black`,
       borderStrokeWidth: 1,
       anchorCornerRadius: 5,
-
+      name:"transformer",
       keepRatio: false,
       ignoreStroke: true,
     });

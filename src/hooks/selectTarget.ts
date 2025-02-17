@@ -11,7 +11,9 @@ export const selectTarget = (layer: Konva.Layer, className: string) => {
     appStore.activeTransform.destroy();
     appStore.activeTransform = null;
   }
-  appStore.activeTransform = new Konva.Transformer({});
+  appStore.activeTransform = new Konva.Transformer({
+    name: "transformer",
+  });
   appStore.activeTransform.nodes([target]);
   layer.add(appStore.activeTransform as Konva.Transformer);
   layer.draw();

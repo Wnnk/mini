@@ -3,6 +3,9 @@ import { useAppStore } from "../../store/app";
 import { watch } from "vue";
 import { updateElementInfos } from "../getElementInofs";
 
+
+
+
 export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
   const appStore = useAppStore();
   if (appStore.tool !== "select") return;
@@ -16,7 +19,9 @@ export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
         if (appStore.activeTransform) {
           appStore.activeTransform.nodes([]);
         } else {
-          appStore.activeTransform = new Konva.Transformer();
+          appStore.activeTransform = new Konva.Transformer({
+            name: "transformer",
+          });
         }
         item.draggable(true);
         selected = item._id;
@@ -31,15 +36,44 @@ export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
 
   const mousedMove = () => {
     if (selected === null || isMouseDown === false) return;
-    const target = layer.findOne((node: any) => node._id === selected);
+    const target = layer.findOne((node: Konva.Node) => node._id === selected);
+    console.log(target)
     if (!target) return;
-    target?.draggable(true);
+
     appStore.activeTransform?.nodes([target]);
-    layer.draw();
+    drawGuidesLine(target);
+
+    layer.batchDraw();
   };
+
+  const drawGuidesLine = (node:Konva.Node) => {
+    layer.find('.guid-line').forEach(node => node.destroy());
+
+    if (!node) return;
+    const { x, y } = node.getClientRect();
+    const rowGuide = new Konva.Line({
+      points: [-6000, y, 6000, y],
+      stroke: 'rgb(0, 161, 255)',
+      strokeWidth: 1,
+      dash: [5, 5],
+      name: "guid-line",
+    })
+    const colGuide = new Konva.Line({
+      points: [x, -6000, x, 6000],
+      stroke: 'rgb(0, 161, 255)',
+      strokeWidth: 1,
+      dash: [5, 5],
+      name: "guid-line",
+    })
+    layer.add(rowGuide);
+    layer.add(colGuide);
+    layer.batchDraw();
+  }
 
   const mouseUp = () => {
     isMouseDown = false;
+    layer.find('.guid-line').forEach((node: any) => node.destroy());
+    layer.batchDraw();
   };
 
   const clearListen = () => {
@@ -59,9 +93,19 @@ export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
     layer.draw();
   };
 
-  document.addEventListener("mousemove", mousedMove);
-  document.addEventListener("mouseup", mouseUp);
+  // layer.on("dragmove", drawGuidesLine(selected))
+
+  layer.on("dragmove", mousedMove);
+  stage.on("mouseup", (e) => {
+    mouseUp();
+  });
   stage.on("click", stageClick);
+
+  
+
+ 
+
+
 
   watch(
     () => appStore.tool,
@@ -72,10 +116,13 @@ export const useSelect = (stage: Konva.Stage, layer: Konva.Layer) => {
         item.off("click");
         item.draggable(false);
       }
-      document.removeEventListener("mousemove", mousedMove);
-      document.removeEventListener("mouseup", mouseUp);
+      layer.off("dragmove", mousedMove);
+      stage.off("mouseup", mouseUp);
       stage.off("click", stageClick);
       clearListen();
     }
   );
+
+
 };
+
